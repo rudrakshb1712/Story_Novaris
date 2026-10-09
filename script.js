@@ -356,159 +356,178 @@
 
 
   /* ==========================================================================
-     3. VERTICAL ENVIRONMENT TRANSITION (GENERATIVE CANVAS SCROLL ENGINE)
+     3. VERTICAL ENVIRONMENT TRANSITION (APPLE-STYLE SCROLL ENGINE)
      ========================================================================== */
-  const bgCanvas = document.getElementById('bg-environment-canvas');
-  const bgCtx = bgCanvas.getContext('2d');
+  const stageLayer1 = document.getElementById('stage-layer-1');
+  const stageLayer2 = document.getElementById('stage-layer-2');
+  const stageLayer3 = document.getElementById('stage-layer-3');
 
-  function resizeBgCanvas() {
-    bgCanvas.width = window.innerWidth;
-    bgCanvas.height = window.innerHeight;
-  }
-  window.addEventListener('resize', resizeBgCanvas);
-  resizeBgCanvas();
-
-  let scrollPercent = 0;
   const hudScrollDepth = document.getElementById('hud-scroll-depth');
   const hudDistrictName = document.getElementById('hud-district-name');
   const hudGridStatus = document.getElementById('hud-grid-status');
 
-  window.addEventListener('scroll', () => {
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    scrollPercent = docHeight > 0 ? Math.min(1, Math.max(0, window.scrollY / docHeight)) : 0;
-    const roundedPercent = Math.round(scrollPercent * 100);
+  const bgCanvas = document.getElementById('bg-environment-canvas');
+  const bgCtx = bgCanvas ? bgCanvas.getContext('2d') : null;
 
-    if (hudScrollDepth) hudScrollDepth.textContent = `${roundedPercent}%`;
-
-    // 3 Scroll Strata Telemetry
-    if (scrollPercent <= 0.3) {
-      if (hudDistrictName) hudDistrictName.textContent = 'MERIDIAN HEIGHTS';
-      if (hudGridStatus) {
-        hudGridStatus.textContent = 'SURPLUS FLOW';
-        hudGridStatus.className = 'font-bold text-cyberCyan';
-      }
-    } else if (scrollPercent <= 0.6) {
-      if (hudDistrictName) hudDistrictName.textContent = 'CONDUIT SUB-NET 12';
-      if (hudGridStatus) {
-        hudGridStatus.textContent = 'PRESSURE IRREGULARITY';
-        hudGridStatus.className = 'font-bold text-amber-400';
-      }
-    } else {
-      if (hudDistrictName) hudDistrictName.textContent = 'SHANTINAGAR / SUB-LEVEL 7';
-      if (hudGridStatus) {
-        hudGridStatus.textContent = 'CRITICAL DEFICIT (6.2%)';
-        hudGridStatus.className = 'font-bold text-alarmCrimson';
-      }
+  function resizeBgCanvas() {
+    if (bgCanvas) {
+      bgCanvas.width = window.innerWidth;
+      bgCanvas.height = window.innerHeight;
     }
-  }, { passive: true });
+  }
+  window.addEventListener('resize', resizeBgCanvas);
+  resizeBgCanvas();
 
-  // Floating background atmospheric particles
-  const bgAtmosphereParticles = Array.from({ length: 45 }, () => ({
+  // Floating background atmospheric motes
+  const bgAtmosphereParticles = Array.from({ length: 35 }, () => ({
     x: Math.random() * window.innerWidth,
     y: Math.random() * window.innerHeight,
     size: Math.random() * 2 + 1,
-    speedY: Math.random() * 0.4 + 0.1,
-    alpha: Math.random() * 0.5 + 0.2
+    speedY: Math.random() * 0.35 + 0.1,
+    alpha: Math.random() * 0.4 + 0.15
   }));
 
-  function renderEnvironmentCanvas() {
-    bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
-    const w = bgCanvas.width;
-    const h = bgCanvas.height;
+  let targetProgress = 0;
+  let currentProgress = 0;
 
-    // Environmental Gradient based on Scroll Transition
-    // 0-30%: Meridian Heights (Crystalline twilight blue / cyan)
-    // 31-60%: Conduit Sub-Net (Industrial dark slate / amber hazard)
-    // 61-100%: Shantinagar & Sub-Level 7 (Deep void / neon violet Thirst Engine)
-    let topColor, bottomColor;
-
-    if (scrollPercent <= 0.3) {
-      const t = scrollPercent / 0.3;
-      topColor = '#061325';
-      bottomColor = '#0b203c';
-    } else if (scrollPercent <= 0.6) {
-      const t = (scrollPercent - 0.3) / 0.3;
-      topColor = '#090d19';
-      bottomColor = '#181220';
-    } else {
-      const t = (scrollPercent - 0.6) / 0.4;
-      topColor = '#05070e';
-      bottomColor = '#1a0928';
-    }
-
-    const bgGrad = bgCtx.createLinearGradient(0, 0, 0, h);
-    bgGrad.addColorStop(0, topColor);
-    bgGrad.addColorStop(1, bottomColor);
-    bgCtx.fillStyle = bgGrad;
-    bgCtx.fillRect(0, 0, w, h);
-
-    // Floating Atmospheric Motes
-    for (let p of bgAtmosphereParticles) {
-      p.y -= p.speedY;
-      if (p.y < 0) p.y = h;
-
-      bgCtx.save();
-      bgCtx.globalAlpha = p.alpha;
-      if (scrollPercent <= 0.3) {
-        bgCtx.fillStyle = '#00F0FF';
-      } else if (scrollPercent <= 0.6) {
-        bgCtx.fillStyle = '#F59E0B';
-      } else {
-        bgCtx.fillStyle = '#C77DFF';
-      }
-      bgCtx.beginPath();
-      bgCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      bgCtx.fill();
-      bgCtx.restore();
-    }
-
-    // Dynamic Visual Features by Depth
-    if (scrollPercent <= 0.3) {
-      // Stage 1: Meridian Heights Skyline Silhouettes & Holographic Fountains
-      bgCtx.strokeStyle = 'rgba(0, 240, 255, 0.12)';
-      bgCtx.lineWidth = 1.5;
-      for (let x = 40; x < w; x += 110) {
-        const height = (Math.sin(x * 0.02) * 0.5 + 0.5) * 180 + 100;
-        bgCtx.strokeRect(x, h - height, 60, height);
-      }
-    } else if (scrollPercent <= 0.6) {
-      // Stage 2: Heavy Industrial Conduits & Leaking Steam Grids
-      bgCtx.strokeStyle = 'rgba(245, 158, 11, 0.15)';
-      bgCtx.lineWidth = 6;
-      bgCtx.beginPath();
-      bgCtx.moveTo(0, h * 0.35);
-      bgCtx.lineTo(w, h * 0.45);
-      bgCtx.moveTo(0, h * 0.7);
-      bgCtx.lineTo(w, h * 0.6);
-      bgCtx.stroke();
-    } else {
-      // Stage 3: Sub-Level 7 Thirst Engine Pulsing 9-Line Glyphs
-      const centerX = w * 0.85;
-      const centerY = h * 0.5;
-      const radius = 90;
-      const time = Date.now() * 0.001;
-
-      bgCtx.save();
-      bgCtx.strokeStyle = 'rgba(157, 78, 221, 0.28)';
-      bgCtx.lineWidth = 2;
-      bgCtx.beginPath();
-      bgCtx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-      bgCtx.stroke();
-
-      // 9 radial interlocking lines
-      for (let i = 0; i < 9; i++) {
-        const angle = (i * Math.PI * 2) / 9 + time * 0.4;
-        bgCtx.beginPath();
-        bgCtx.moveTo(centerX + Math.cos(angle) * (radius - 20), centerY + Math.sin(angle) * (radius - 20));
-        bgCtx.lineTo(centerX + Math.cos(angle) * (radius + 15), centerY + Math.sin(angle) * (radius + 15));
-        bgCtx.stroke();
-      }
-      bgCtx.restore();
-    }
-
-    requestAnimationFrame(renderEnvironmentCanvas);
+  function updateScrollTarget() {
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    targetProgress = docHeight > 0 ? Math.min(1.0, Math.max(0.0, window.scrollY / docHeight)) : 0;
   }
-  requestAnimationFrame(renderEnvironmentCanvas);
+  window.addEventListener('scroll', updateScrollTarget, { passive: true });
+  updateScrollTarget();
+
+  function animateStageAndEnvironment() {
+    // Smooth Apple-style lerp damping (0.12)
+    currentProgress += (targetProgress - currentProgress) * 0.12;
+    const p = currentProgress;
+
+    // 1. Apple-Style 3-Layer Scroll Transitions
+    let op1 = 0, scale1 = 1.0, transY1 = 0;
+    let op2 = 0, scale2 = 1.0, transY2 = 0;
+    let op3 = 0, scale3 = 1.0, transY3 = 0;
+
+    if (p <= 0.35) {
+      // Progress 0.00 – 0.35 (Upper Novaris):
+      // Layer 1 (uppertown): opacity = 1, gently scaling from scale(1.06) down to scale(1.0)
+      // Layer 2 and Layer 3: opacity = 0
+      const t = p / 0.35;
+      op1 = 1.0;
+      scale1 = 1.06 - (t * 0.06);
+      transY1 = 0;
+
+      op2 = 0;
+      scale2 = 1.04;
+      transY2 = 35;
+
+      op3 = 0;
+      scale3 = 0.96;
+      transY3 = 0;
+    } else if (p <= 0.70) {
+      // Progress 0.35 – 0.70 (The Undertown Descent):
+      // Smooth cross-fade: Layer 1 fades from 1 to 0
+      // Layer 2 (undertown): fades in from 0 to 1 with subtle downward translation (translateY)
+      // Layer 3: opacity = 0
+      const t = (p - 0.35) / 0.35;
+      op1 = Math.max(0, 1.0 - t);
+      scale1 = 1.0 - (t * 0.03);
+      transY1 = -t * 20;
+
+      op2 = Math.min(1.0, t);
+      scale2 = 1.04 - (t * 0.04);
+      transY2 = (1.0 - t) * 35; // Simulates descending underground into Shantinagar
+
+      op3 = 0;
+      scale3 = 0.96;
+      transY3 = 0;
+    } else {
+      // Progress 0.70 – 1.00 (The Exploded Engine Core):
+      // Layer 2 fades out to 0.1
+      // Layer 3 (exploded_core): fades in to opacity = 1, expanding smoothly (scale(0.96) to scale(1.1))
+      const t = Math.min(1.0, (p - 0.70) / 0.30);
+      op1 = 0;
+      scale1 = 0.97;
+      transY1 = -20;
+
+      op2 = Math.max(0.1, 1.0 - (t * 0.90));
+      scale2 = 1.0 - (t * 0.04);
+      transY2 = -t * 15;
+
+      op3 = Math.min(1.0, t);
+      scale3 = 0.96 + (t * 0.14); // 0.96 -> 1.10 Apple-style exploded view
+      transY3 = 0;
+    }
+
+    // Apply computed matrix styles to image layers
+    if (stageLayer1) {
+      stageLayer1.style.opacity = op1.toFixed(3);
+      stageLayer1.style.transform = `scale(${scale1.toFixed(4)}) translateY(${transY1.toFixed(1)}px)`;
+    }
+    if (stageLayer2) {
+      stageLayer2.style.opacity = op2.toFixed(3);
+      stageLayer2.style.transform = `scale(${scale2.toFixed(4)}) translateY(${transY2.toFixed(1)}px)`;
+    }
+    if (stageLayer3) {
+      stageLayer3.style.opacity = op3.toFixed(3);
+      stageLayer3.style.transform = `scale(${scale3.toFixed(4)}) translateY(${transY3.toFixed(1)}px)`;
+    }
+
+    // 2. HUD Telemetry & District Status Synchronization
+    const roundedPercent = Math.round(targetProgress * 100);
+    if (hudScrollDepth) hudScrollDepth.textContent = `${roundedPercent}%`;
+
+    if (p <= 0.35) {
+      if (hudDistrictName) hudDistrictName.textContent = 'MERIDIAN HEIGHTS';
+      if (hudGridStatus) {
+        hudGridStatus.textContent = 'SURPLUS FLOW (99.8%)';
+        hudGridStatus.className = 'font-bold text-cyberCyan';
+      }
+    } else if (p <= 0.70) {
+      if (hudDistrictName) hudDistrictName.textContent = 'CONDUIT SUB-NET 12 // SHANTINAGAR';
+      if (hudGridStatus) {
+        hudGridStatus.textContent = 'PRESSURE IRREGULARITY (420 PSI)';
+        hudGridStatus.className = 'font-bold text-amber-400';
+      }
+    } else {
+      if (hudDistrictName) hudDistrictName.textContent = 'SUB-LEVEL 7 // THIRST ENGINE CORE';
+      if (hudGridStatus) {
+        hudGridStatus.textContent = 'CORE DECONSTRUCTION ACTIVE';
+        hudGridStatus.className = 'font-bold text-alarmCrimson';
+      }
+    }
+
+    // 3. Ambient Atmospheric Particle Canvas (Motes floating over photorealistic art)
+    if (bgCtx && bgCanvas) {
+      bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+      const w = bgCanvas.width;
+      const h = bgCanvas.height;
+
+      let moteColor = '#00F0FF';
+      if (p > 0.70) {
+        moteColor = '#C77DFF';
+      } else if (p > 0.35) {
+        moteColor = '#F59E0B';
+      }
+
+      for (let pt of bgAtmosphereParticles) {
+        pt.y -= pt.speedY;
+        if (pt.y < 0) pt.y = h;
+
+        bgCtx.save();
+        bgCtx.globalAlpha = pt.alpha;
+        bgCtx.fillStyle = moteColor;
+        bgCtx.shadowColor = moteColor;
+        bgCtx.shadowBlur = 6;
+        bgCtx.beginPath();
+        bgCtx.arc(pt.x, pt.y, pt.size, 0, Math.PI * 2);
+        bgCtx.fill();
+        bgCtx.restore();
+      }
+    }
+
+    requestAnimationFrame(animateStageAndEnvironment);
+  }
+  requestAnimationFrame(animateStageAndEnvironment);
 
 
   /* ==========================================================================

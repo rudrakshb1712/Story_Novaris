@@ -84,16 +84,24 @@ Zero external audio asset dependencies. All sound effects are generated mathemat
 
 ## 6. Dynamic Generative Canvas Viewport (Scroll Transition)
 
-The fixed background canvas (`#bg-environment-canvas`) renders 3 distinct environmental strata synchronized to the user's scroll depth:
-- **0% – 30% Scroll (Upper Novaris / Meridian Heights)**:
-  - Crystalline skyscrapers, twilight blue sky, holographic fountains, pristine cyan skyline, and Stark network probes.
+The fixed background viewport (`#stage-viewport`) renders 3 high-resolution cyberpunk environmental image layers from `assets/` utilizing smooth, hardware-accelerated Apple-style scroll transitions:
+
+- **0.00 – 0.35 Scroll (Upper Novaris / Meridian Heights Skyline — Layer 1)**:
+  - Crystalline skyscrapers, vertical mist gardens, holographic cyan waterfalls, and pristine skyline.
+  - Image: `assets/uppertown.png` (`scale(1.06)` $\rightarrow$ `scale(1.0)`, `opacity = 1.0`).
   - Telemetry: `DISTRICT: MERIDIAN HEIGHTS // WATER PURITY: 99.8% // STATUS: SURPLUS FLOW`.
-- **31% – 60% Scroll (Conduit Infrastructure Descent)**:
-  - Dark industrial concrete, heavy iron distribution pipes, amber hazard warnings, flickering neon, and steam leaks.
+- **0.35 – 0.70 Scroll (The Undertown Descent / Shantinagar & Conduits — Layer 2)**:
+  - Seamless cross-fade from Layer 1 (`opacity: 1` $\rightarrow$ `0`) into Layer 2 (`opacity: 0` $\rightarrow$ `1`).
+  - Downward translation (`translateY`) simulates diving deep underground into Shantinagar's cracked streets and pipeline ruptures.
+  - Image: `assets/undertown.png`.
   - Telemetry: `SECTOR: CONDUIT SUB-NET 12 // PRESSURE IRREGULARITY DETECTED // FLOW DIVERTED`.
-- **61% – 100% Scroll (Shantinagar & Sub-Level 7)**:
-  - Gritty alleys, dry hydrants, subterranean industrial caverns, and the pulsing violet 9-line circular glyph of the Thirst Engine.
-  - Telemetry: `DISTRICT: SHANTINAGAR // WATER ACCESS: 6.2% CRITICAL // CRISIS PROTOCOL INACTIVE`.
+- **0.70 – 1.00 Scroll (The Exploded Engine Core — Layer 3)**:
+  - Layer 2 fades to ambient `0.1` opacity.
+  - Layer 3 fades in to full `opacity = 1.0`, expanding smoothly from `scale(0.96)` to `scale(1.10)` to deliver the signature Apple-style deconstructed/exploded view of the Thirst Engine mechanical core.
+  - Image: `assets/exploded_core.png`.
+  - Telemetry: `SUB-LEVEL 7 // THIRST ENGINE CORE // CORE DECONSTRUCTION ACTIVE`.
+- **Contrast & Legibility Protection**:
+  - Overlaid with a dark radial vignette (`.stage-vignette`), scanning grid lines (`.stage-grid-overlay`), scanlines (`.stage-scanlines`), and ambient floating energy motes (`#bg-environment-canvas`) so foreground tactical cards remain high-contrast and readable.
 
 ---
 

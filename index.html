@@ -103,10 +103,27 @@
   <!-- Thruster Physics Canvas (Embers & Repulsor Shockwaves) -->
   <canvas id="cursor-fx-canvas" aria-hidden="true"></canvas>
 
-  <!-- Background Environment Viewport (Generative 3-Stage Canvas) -->
+  <!-- =========================================================================
+       FIXED APPLE-STYLE SCROLL VIEWPORT ARCHITECTURE (#stage-viewport)
+       ========================================================================= -->
+  <div id="stage-viewport" class="stage-viewport" aria-hidden="true">
+    <!-- Layer 1: Upper Novaris / Meridian Heights Skyline -->
+    <img id="stage-layer-1" src="assets/uppertown.png" onerror="this.src='assets/Gemini_Generated_Image_6o04wr6o04wr6o04.png'" alt="Meridian Heights Skyline" class="stage-layer" />
+
+    <!-- Layer 2: Undertown / Shantinagar & Pipeline Grid -->
+    <img id="stage-layer-2" src="assets/undertown.png" onerror="this.src='assets/Gemini_Generated_Image_2t4xor2t4xor2t4x.png'" alt="Shantinagar and Pipeline Grid" class="stage-layer" />
+
+    <!-- Layer 3: Exploded / Deconstructed Thirst Engine Core -->
+    <img id="stage-layer-3" src="assets/exploded_core.png" onerror="this.src='assets/Gemini_Generated_Image_95chp295chp295ch.png'" alt="Exploded Thirst Engine Core" class="stage-layer" />
+
+    <!-- Subtle Dark Vignette & Tactical Scanning Grid Overlay -->
+    <div class="stage-vignette"></div>
+    <div class="stage-grid-overlay"></div>
+    <div class="stage-scanlines"></div>
+  </div>
+
+  <!-- Ambient Atmospheric Canvas (Particles & Energy Glow) -->
   <canvas id="bg-environment-canvas" aria-hidden="true"></canvas>
-  <div class="tactical-grid-overlay" aria-hidden="true"></div>
-  <div class="tactical-scanlines" aria-hidden="true"></div>
 
   <!-- =========================================================================
        FIXED TOP HUD STATUS BAR
