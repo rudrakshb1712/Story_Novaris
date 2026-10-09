@@ -141,7 +141,35 @@ Interactive comparative toggle between **Under Thirst Engine** and **After Last 
 
 ---
 
-## 8. Setup & Local Execution
+## 8. Gamified Arcade Storyline Progression & Mini-Game Gateways
+
+Instead of a passive scroll through all 7 chapters, the mission unfolds via an **episodic progression system**:
+- Only **Chapter 1** is initially accessible.
+- Subsequent chapters are protected by high-tech security gateways requiring successful completion of fast 10–15s HTML5 canvas mini-games:
+  1. **Game 1 (Ch 1 $\rightarrow$ Ch 2) "Droplet Catch"**: Control an emergency bypass paddle to catch 3 falling clean water drops while avoiding toxic red sludge.
+  2. **Game 2 (Ch 2 $\rightarrow$ Ch 3) "Node Decryption"**: A 3-beat Simon-Says memory sequence game where cyber nodes light up and the player replicates the exact frequency pattern.
+  3. **Game 3 (Ch 3 $\rightarrow$ Ch 4) "Valve Timing Lock"**: Precision timing indicator ring; click or press Spacebar when the rotating needle aligns with the green safe zone (3 successful locks).
+  4. **Game 4 (Ch 4 $\rightarrow$ Ch 5) "Virus Buster"**: Retro 8-bit space shooter targeting 4 roaming violet virus nodes with Iron Man's repulsor targeting lasers.
+  5. **Game 5 (Ch 5 $\rightarrow$ Ch 6) "Pressure Balancer"**: Stabilize an oscillating needle within the safe green zone (180–220 PSI) for 5.0 seconds under turbulent forces.
+  6. **Game 6 (Ch 6 $\rightarrow$ Ch 7) "Core Decouple Mash"**: Rapidly mash the `[ OVERRIDE ]` button or Spacebar to reach 100% decoupling within 8.0 seconds to sever the Thirst Engine.
+- **Retro CRT Screen Transition Animation**: Victory triggers an 8-bit fanfare arpeggio and a full-screen television laser-line pinch effect with `[ STAGE COMPLETE // PROTOCOL BYPASSED ]` text and smooth auto-scrolling to the next chapter.
+- **Zero-Penalty Instant Retry**: On failure, players can instantly restart the quick test with zero penalty.
+
+---
+
+## 9. Tactical Map Hero & Grand Victory Finale
+
+1. **Holographic Tactical Map Hero Section**:
+   - High-tech holographic frame displaying `assets/map.png` with live radar sweep keyframes, corner HUD brackets, and 4 interactive telemetry pins (Meridian Heights, Lake Thalass, Shantinagar, Sub-Level 7 Vault).
+   - Primary pulsing CTA button `[ EXPLORE NOVARIS CITY // INITIATE CHAPTER 1 ]` with repulsor sound cue.
+2. **Grand Finale Showcase (`#finale-section`)**:
+   - Unlocked after Chapter 7: displays `assets/avengers_poster.png` in an illuminated gold and cyan ambient backlight frame.
+   - Headline: *"NOVARIS SECURED: WATER FOR ALL"*.
+   - Community Water Charter summary and interactive SDG 6, 10, and 11 completion metrics.
+
+---
+
+## 10. Setup & Local Execution
 
 ### Option A: Using the Python Runner (`story.py`)
 Launch the built-in HTTP server:

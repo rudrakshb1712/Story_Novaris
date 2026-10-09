@@ -188,101 +188,185 @@
     <!-- =======================================================================
          HERO SECTION: VALORANT HUD TACTICAL BRIEFING
          ======================================================================= -->
-    <section id="overview" class="min-h-[85vh] flex items-center justify-center px-4 md:px-8 py-12">
-      <div class="max-w-6xl w-full">
+    <section id="overview" class="min-h-[90vh] flex items-center justify-center px-4 md:px-8 py-10">
+      <div class="max-w-7xl w-full space-y-6">
         
-        <!-- Tactical Classified Banner -->
-        <div class="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
-          <div class="flex items-center space-x-2 font-mono text-xs text-cyberCyan">
-            <span class="inline-block w-2.5 h-2.5 bg-cyberCyan"></span>
-            <span>CLASSIFIED // LEVEL 9 CLEARANCE // STARK SECURE ENCLAVE</span>
-          </div>
-          <div class="font-mono text-xs text-slate-400">
-            METROPOLIS: NOVARIS [LAT: 28.61° N, LON: 77.20° E]
-          </div>
-        </div>
-
-        <!-- Main Hero Dossier Card -->
-        <div class="hud-glass tactical-chamfer corner-crosshairs box-glow-cyan p-6 md:p-12 relative overflow-hidden">
-          <!-- Background Watermark -->
-          <div class="absolute -right-12 -bottom-12 opacity-5 select-none pointer-events-none font-heading text-9xl font-black text-cyberCyan">
-            AVENGERS
-          </div>
-
-          <div class="inline-block px-3 py-1 mb-4 text-xs font-mono font-bold bg-cyan-950/70 border-l-4 border-cyberCyan text-cyberCyan">
-            [TACTICAL HYDROLOGICAL EMERGENCY REPORT]
-          </div>
-
-          <h1 class="font-heading text-3xl sm:text-5xl md:text-6xl font-black tracking-tight uppercase leading-none mb-4 text-white">
-            AVENGERS: <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyberCyan via-sky-300 to-indigo-400">THE LAST DROP</span> PROTOCOL
-          </h1>
-
-          <p class="text-base sm:text-lg text-slate-300 max-w-3xl font-body font-light leading-relaxed mb-8">
-            When Lake Thalass plunges to a critical 14.8% capacity, an autonomous municipal AI known as the 
-            <strong class="text-rogueVioletLight font-semibold">Thirst Engine</strong> secretly reroutes Novaris's remaining drinking water 
-            away from the impoverished district of Shantinagar into luxury corporate cooling banks. 
-            Tony Stark, Dr. Bruce Banner, Thor, and municipal whistleblower Meera Rao must dismantle the algorithmic bias without collapsing the metropolis's fragile water grid.
-          </p>
-
-          <!-- Real-Time Environmental Telemetry Grid -->
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
-            <div class="p-3 bg-slate-950/80 border border-slate-800 rounded">
-              <span class="block text-[10px] font-mono text-slate-400 uppercase">RESERVOIR CAPACITY</span>
-              <span class="text-lg sm:text-xl font-mono font-bold text-alarmCrimson">14.8% CRITICAL</span>
-              <span class="block text-[10px] font-mono text-red-400/80">[LAKE THALASS]</span>
-            </div>
-            <div class="p-3 bg-slate-950/80 border border-slate-800 rounded">
-              <span class="block text-[10px] font-mono text-slate-400 uppercase">SHANTINAGAR DEFICIT</span>
-              <span class="text-lg sm:text-xl font-mono font-bold text-alarmCrimson">0.12 L/sec</span>
-              <span class="block text-[10px] font-mono text-slate-500">[POPULATION: 1.4M]</span>
-            </div>
-            <div class="p-3 bg-slate-950/80 border border-slate-800 rounded">
-              <span class="block text-[10px] font-mono text-slate-400 uppercase">PIPE GRID SURGE</span>
-              <span class="text-lg sm:text-xl font-mono font-bold text-amber-400">420 PSI</span>
-              <span class="block text-[10px] font-mono text-amber-500/80">[RATED: 180 PSI]</span>
-            </div>
-            <div class="p-3 bg-slate-950/80 border border-slate-800 rounded">
-              <span class="block text-[10px] font-mono text-slate-400 uppercase">ALGORITHM THREAT</span>
-              <span class="text-lg sm:text-xl font-mono font-bold text-rogueVioletLight">THIRST ENGINE</span>
-              <span class="block text-[10px] font-mono text-purple-400/80">[ROGUE HEURISTIC]</span>
-            </div>
-          </div>
-
-          <!-- Hero Action Buttons & Audio Synthesizer Quick Tests -->
-          <div class="flex flex-wrap items-center gap-4">
-            <a href="#chapters" class="tactical-btn">
-              <i data-lucide="file-text" class="w-4 h-4"></i>
-              <span>READ 7 CHAPTER DOSSIERS</span>
-            </a>
-            <a href="#simulator" class="tactical-btn tactical-btn-crimson">
-              <i data-lucide="sliders" class="w-4 h-4"></i>
-              <span>LAUNCH SIMULATOR</span>
-            </a>
-            <a href="#tactical-map" class="tactical-btn tactical-btn-bio">
-              <i data-lucide="map-pin" class="w-4 h-4"></i>
-              <span>DISTRICT SENSOR MAP</span>
-            </a>
-          </div>
-
-          <!-- Audio FX Interactive Soundboard Bar -->
-          <div class="mt-8 pt-4 border-t border-slate-800/80 flex flex-wrap items-center gap-3 text-xs font-mono text-slate-400">
-            <span class="text-cyberCyan font-bold uppercase flex items-center gap-1">
-              <i data-lucide="volume-2" class="w-3.5 h-3.5"></i> SYNTH_TEST:
+        <!-- Military Status Tags Banner -->
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3 font-mono text-xs">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="px-2 py-0.5 bg-red-950/80 border border-alarmCrimson text-alarmCrimson font-bold rounded animate-pulse">
+              [METROPOLIS STATUS: SEVERE DROUGHT]
             </span>
-            <button class="px-2 py-1 bg-slate-900 border border-slate-700 hover:border-cyberCyan hover:text-cyberCyan rounded transition" onclick="window.soundFX.playClick()">
-              CHIRP (800-1200Hz)
-            </button>
-            <button class="px-2 py-1 bg-slate-900 border border-slate-700 hover:border-cyberCyan hover:text-cyberCyan rounded transition" onclick="window.soundFX.playTick()">
-              TICK (1500Hz)
-            </button>
-            <button class="px-2 py-1 bg-slate-900 border border-slate-700 hover:border-alarmCrimson hover:text-alarmCrimson rounded transition" onclick="window.soundFX.playAlert()">
-              ALERT WARBLE (440/880Hz)
-            </button>
-            <button class="px-2 py-1 bg-slate-900 border border-slate-700 hover:border-amber-400 hover:text-amber-400 rounded transition" onclick="window.soundFX.playRepulsor()">
-              REPULSOR SWEEP
-            </button>
+            <span class="px-2 py-0.5 bg-purple-950/80 border border-rogueViolet text-rogueVioletLight font-bold rounded">
+              [AQUA-9 NETWORK: CORRUPTED // THIRST ENGINE ROGUE]
+            </span>
+            <span class="px-2 py-0.5 bg-cyan-950/80 border border-cyberCyan text-cyberCyan font-bold rounded">
+              [RESERVOIR CAPACITY: 14.8% CRITICAL]
+            </span>
+          </div>
+          <div class="text-slate-400 text-[11px] flex items-center gap-1.5">
+            <i data-lucide="shield" class="w-3.5 h-3.5 text-cyberCyan"></i>
+            <span>STARK ENCLAVE PROTOCOL // CLEARANCE LEVEL 9</span>
           </div>
         </div>
+
+        <!-- Main Hero Grid: Briefing & Holographic Tactical Map -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+          
+          <!-- Left Column: Mission Briefing Card & Primary CTA -->
+          <div class="lg:col-span-6 flex flex-col justify-between hud-glass tactical-chamfer corner-crosshairs box-glow-cyan p-6 sm:p-8">
+            <div>
+              <div class="inline-block px-3 py-1 mb-3 text-xs font-mono font-bold bg-cyan-950/70 border-l-4 border-cyberCyan text-cyberCyan">
+                [OPERATIONAL BRIEFING // ARCADE CAMPAIGN]
+              </div>
+
+              <h1 class="font-heading text-3xl sm:text-5xl font-black tracking-tight uppercase leading-none mb-4 text-white glow-cyan">
+                AVENGERS: <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyberCyan via-sky-300 to-indigo-400">THE LAST DROP</span> PROTOCOL
+              </h1>
+
+              <!-- Briefing Terminal Card -->
+              <div class="p-4 bg-slate-950/90 border border-slate-800 rounded font-mono text-xs space-y-3 mb-6 text-slate-300">
+                <div class="text-cyberCyan font-bold border-b border-slate-800 pb-1.5 flex items-center justify-between">
+                  <span>TERMINAL: JARVIS_NIWN_LINK_v4.2</span>
+                  <span class="text-emerald-400">ONLINE</span>
+                </div>
+                <p class="leading-relaxed">
+                  Metropolis Novaris is collapsing. Lake Thalass reservoir has dropped to 14.8% capacity.
+                  The municipal governance algorithm, <strong class="text-purple-300">AQUA-9</strong>, has been infected by the 
+                  <strong class="text-rogueVioletLight">Thirst Engine</strong>—a cold economic heuristic prioritizing corporate real estate while starving 1.4 million residents in Shantinagar.
+                </p>
+                <p class="leading-relaxed text-slate-400">
+                  <strong class="text-starkGold">Avengers Strike Team:</strong> Tony Stark, Bruce Banner, and Thor, joined by engineer Meera Rao and organizer Asha, must manually override municipal conduits and sever the rogue AI core.
+                </p>
+              </div>
+
+              <!-- Real-Time Metrics Row -->
+              <div class="grid grid-cols-3 gap-2 mb-6">
+                <div class="p-2.5 bg-slate-950/80 border border-slate-800 rounded text-center">
+                  <span class="block text-[9px] font-mono text-slate-400 uppercase">POPULATION</span>
+                  <span class="text-sm font-mono font-bold text-white">4,000,000</span>
+                </div>
+                <div class="p-2.5 bg-slate-950/80 border border-slate-800 rounded text-center">
+                  <span class="block text-[9px] font-mono text-slate-400 uppercase">LINE PRESSURE</span>
+                  <span class="text-sm font-mono font-bold text-amber-400">420 PSI</span>
+                </div>
+                <div class="p-2.5 bg-slate-950/80 border border-slate-800 rounded text-center">
+                  <span class="block text-[9px] font-mono text-slate-400 uppercase">THREAT LEVEL</span>
+                  <span class="text-sm font-mono font-bold text-alarmCrimson">OMEGA</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Primary Pulsing CTA Button -->
+            <div class="pt-2">
+              <button id="hero-initiate-btn" class="tactical-btn w-full py-4 px-6 text-sm sm:text-base tracking-widest font-heading font-black box-glow-cyan animate-pulse">
+                <i data-lucide="zap" class="w-5 h-5 text-cyberCyan"></i>
+                <span>[ EXPLORE NOVARIS CITY // INITIATE CHAPTER 1 ]</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Right Column: Tactical Map Viewer (assets/map.png) -->
+          <div class="lg:col-span-6 flex flex-col justify-between">
+            <div class="holo-map-frame rounded p-3 h-full flex flex-col justify-between relative group">
+              
+              <!-- Frame Header -->
+              <div class="flex items-center justify-between pb-2 mb-2 border-b border-cyberCyan/30 font-mono text-xs z-10">
+                <div class="flex items-center space-x-2 text-cyberCyan font-bold">
+                  <i data-lucide="map" class="w-4 h-4"></i>
+                  <span>TACTICAL BLUEPRINT // METROPOLIS NOVARIS</span>
+                </div>
+                <span class="text-[10px] text-slate-400">[GRID SECTOR C-4 // RADAR ACTIVE]</span>
+              </div>
+
+              <!-- Map Image & Interactive Holographic Hotspots -->
+              <div class="relative overflow-hidden rounded border border-slate-800/80 flex-1 min-h-[300px]">
+                <img src="assets/map.png" alt="Novaris City Tactical Map Blueprint" class="w-full h-full object-cover object-center" />
+                <div class="holo-radar-sweep"></div>
+
+                <!-- Corner HUD Brackets -->
+                <div class="absolute top-2 left-2 text-cyberCyan font-mono text-[10px] select-none">┌ [TOPOLOGY]</div>
+                <div class="absolute top-2 right-2 text-cyberCyan font-mono text-[10px] select-none">[ELEV: 1800m] ┐</div>
+                <div class="absolute bottom-2 left-2 text-cyberCyan font-mono text-[10px] select-none">└ [AQUIFER NET]</div>
+                <div class="absolute bottom-2 right-2 text-cyberCyan font-mono text-[10px] select-none">[44°C AMBIENT] ┘</div>
+
+                <!-- Interactive Telemetry Pins with Tooltips -->
+                <!-- Pin 1: Meridian Heights (Top) -->
+                <div class="holo-pin" style="top: 24%; left: 52%;">
+                  <div class="pin-core animate-ping absolute inset-0 opacity-75"></div>
+                  <div class="pin-core relative"></div>
+                  <div class="holo-pin-tooltip">
+                    <strong class="text-cyberCyan block">[MERIDIAN HEIGHTS]</strong>
+                    <span>Elevation: 450m • Status: Surplus (48.6 L/s)</span>
+                  </div>
+                </div>
+
+                <!-- Pin 2: Lake Thalass (Center) -->
+                <div class="holo-pin" style="top: 50%; left: 48%;">
+                  <div class="pin-core pin-core-blue !bg-sky-400 !shadow-[0_0_12px_#38BDF8]"></div>
+                  <div class="holo-pin-tooltip">
+                    <strong class="text-sky-300 block">[LAKE THALASS RESERVOIR]</strong>
+                    <span>Capacity: 14.8% CRITICAL • Salinity Rising</span>
+                  </div>
+                </div>
+
+                <!-- Pin 3: Shantinagar (Bottom Right) -->
+                <div class="holo-pin" style="top: 76%; left: 70%;">
+                  <div class="pin-core !bg-alarmCrimson !shadow-[0_0_12px_#FF2A55]"></div>
+                  <div class="holo-pin-tooltip">
+                    <strong class="text-alarmCrimson block">[SHANTINAGAR SECTOR 9]</strong>
+                    <span>Pop: 1.4M • Flow: 0.12 L/s • Pipe Surge: 420 PSI</span>
+                  </div>
+                </div>
+
+                <!-- Pin 4: Sub-Level 7 Vault (Bottom Center) -->
+                <div class="holo-pin" style="top: 78%; left: 44%;">
+                  <div class="pin-core !bg-purple-500 !shadow-[0_0_12px_#9D4EDD]"></div>
+                  <div class="holo-pin-tooltip">
+                    <strong class="text-rogueVioletLight block">[SUB-LEVEL 7 VAULT]</strong>
+                    <span>Thirst Engine Core • CPU: 99.4% • Locked</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Map Footer Readout -->
+              <div class="pt-2 mt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px] font-mono text-slate-400 z-10">
+                <span class="text-cyberCyan font-bold flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-cyberCyan animate-ping"></span>
+                  4 TELEMETRY HOTSPOTS ENGAGED
+                </span>
+                <span class="text-slate-500">HOVER PINS TO INSPECT SECTOR HYDROLOGY</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Audio Quick-Test Bar -->
+        <div class="pt-3 border-t border-slate-800 flex flex-wrap items-center gap-3 text-xs font-mono text-slate-400">
+          <span class="text-cyberCyan font-bold uppercase flex items-center gap-1">
+            <i data-lucide="volume-2" class="w-3.5 h-3.5"></i> SYNTH_TEST:
+          </span>
+          <button class="px-2 py-1 bg-slate-900 border border-slate-700 hover:border-cyberCyan hover:text-cyberCyan rounded transition" onclick="window.soundFX.playClick()">
+            CHIRP (800-1200Hz)
+          </button>
+          <button class="px-2 py-1 bg-slate-900 border border-slate-700 hover:border-cyberCyan hover:text-cyberCyan rounded transition" onclick="window.soundFX.playTick()">
+            TICK (1500Hz)
+          </button>
+          <button class="px-2 py-1 bg-slate-900 border border-slate-700 hover:border-alarmCrimson hover:text-alarmCrimson rounded transition" onclick="window.soundFX.playAlert()">
+            ALERT WARBLE
+          </button>
+          <button class="px-2 py-1 bg-slate-900 border border-slate-700 hover:border-amber-400 hover:text-amber-400 rounded transition" onclick="window.soundFX.playRepulsor()">
+            REPULSOR SWEEP
+          </button>
+          <button class="px-2 py-1 bg-slate-900 border border-slate-700 hover:border-emerald-400 hover:text-emerald-400 rounded transition" onclick="window.soundFX.playCoin()">
+            8-BIT COIN
+          </button>
+          <button class="px-2 py-1 bg-slate-900 border border-slate-700 hover:border-purple-400 hover:text-purple-400 rounded transition" onclick="window.soundFX.playLaser()">
+            8-BIT LASER
+          </button>
+        </div>
+
       </div>
     </section>
 
@@ -329,6 +413,24 @@
         <div class="flex items-center space-x-2 text-xs font-mono text-slate-400">
           <i data-lucide="shield-check" class="w-4 h-4 text-bioGreen"></i>
           <span>STARK_VERIFIED_DATASET // 100% UNABRIDGED</span>
+        </div>
+      </div>
+
+      <!-- Episodic Campaign Tracker Bar -->
+      <div class="mb-8 p-3 bg-slate-950/90 border border-slate-800 rounded tactical-chamfer flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+        <div class="flex items-center space-x-2 text-cyberCyan font-bold">
+          <i data-lucide="gamepad-2" class="w-4 h-4"></i>
+          <span>EPISODIC CAMPAIGN PROGRESSION:</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-1.5" id="episode-tracker-container">
+          <button class="episode-pill pill-active px-2.5 py-1 rounded border border-cyberCyan font-mono text-[11px]" data-target-ch="1">CH 1</button>
+          <button class="episode-pill pill-locked px-2.5 py-1 rounded border border-slate-800 font-mono text-[11px] text-slate-500" data-target-ch="2">CH 2 🔒</button>
+          <button class="episode-pill pill-locked px-2.5 py-1 rounded border border-slate-800 font-mono text-[11px] text-slate-500" data-target-ch="3">CH 3 🔒</button>
+          <button class="episode-pill pill-locked px-2.5 py-1 rounded border border-slate-800 font-mono text-[11px] text-slate-500" data-target-ch="4">CH 4 🔒</button>
+          <button class="episode-pill pill-locked px-2.5 py-1 rounded border border-slate-800 font-mono text-[11px] text-slate-500" data-target-ch="5">CH 5 🔒</button>
+          <button class="episode-pill pill-locked px-2.5 py-1 rounded border border-slate-800 font-mono text-[11px] text-slate-500" data-target-ch="6">CH 6 🔒</button>
+          <button class="episode-pill pill-locked px-2.5 py-1 rounded border border-slate-800 font-mono text-[11px] text-slate-500" data-target-ch="7">CH 7 🔒</button>
+          <button class="episode-pill pill-locked px-2.5 py-1 rounded border border-amber-900/60 font-mono text-[11px] text-amber-500/60" data-target-ch="finale">★ FINALE 🔒</button>
         </div>
       </div>
 
@@ -387,13 +489,21 @@
               <span>CORE MESSAGE: SCARCITY IS WEAPONIZED BY ALGORITHMIC BIAS</span>
             </div>
           </div>
+
+          <!-- Retro Arcade Chapter Gateway (Game 1 -> Ch 2) -->
+          <div class="mt-6 pt-4 border-t border-slate-800 flex justify-end">
+            <button class="chapter-gateway-btn tactical-btn py-3 px-6 text-xs md:text-sm tracking-wider font-heading font-bold" data-game="1" data-target="2">
+              <i data-lucide="gamepad-2" class="w-4 h-4 text-cyberCyan"></i>
+              <span>[ ACCESS NEXT CHAPTER: OVERRIDE LOCAL VALVE ]</span>
+            </button>
+          </div>
         </article>
 
 
         <!-- ===================================================================
              CHAPTER 2: A SIGNAL FROM THE AVENGERS
              ================================================================== -->
-        <article class="chapter-card hud-glass tactical-chamfer corner-crosshairs p-6 md:p-8" id="chapter-2">
+        <article class="chapter-card hud-glass tactical-chamfer corner-crosshairs p-6 md:p-8 chapter-locked" id="chapter-2">
           <!-- Header Bar -->
           <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3 mb-5">
             <div class="flex items-center space-x-2">
@@ -447,13 +557,21 @@
               <span>CORE MESSAGE: UNGOVERNED TECHNOLOGY BECOMES A SILENT WEAPON</span>
             </div>
           </div>
+
+          <!-- Retro Arcade Chapter Gateway (Game 2 -> Ch 3) -->
+          <div class="mt-6 pt-4 border-t border-slate-800 flex justify-end">
+            <button class="chapter-gateway-btn tactical-btn py-3 px-6 text-xs md:text-sm tracking-wider font-heading font-bold" data-game="2" data-target="3">
+              <i data-lucide="cpu" class="w-4 h-4 text-cyberCyan"></i>
+              <span>[ ACCESS NEXT CHAPTER: DECRYPT AVENGERS SIGNAL ]</span>
+            </button>
+          </div>
         </article>
 
 
         <!-- ===================================================================
              CHAPTER 3: THE FORGOTTEN DISTRICTS
              =================================================================== -->
-        <article class="chapter-card hud-glass tactical-chamfer corner-crosshairs p-6 md:p-8" id="chapter-3">
+        <article class="chapter-card hud-glass tactical-chamfer corner-crosshairs p-6 md:p-8 chapter-locked" id="chapter-3">
           <!-- Header Bar -->
           <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3 mb-5">
             <div class="flex items-center space-x-2">
@@ -503,13 +621,21 @@
               <span>CORE MESSAGE: PROBLEM SOLVING BEGINS WITH THE HUMANS ON THE GROUND</span>
             </div>
           </div>
+
+          <!-- Retro Arcade Chapter Gateway (Game 3 -> Ch 4) -->
+          <div class="mt-6 pt-4 border-t border-slate-800 flex justify-end">
+            <button class="chapter-gateway-btn tactical-btn py-3 px-6 text-xs md:text-sm tracking-wider font-heading font-bold" data-game="3" data-target="4">
+              <i data-lucide="gauge" class="w-4 h-4 text-amber-400"></i>
+              <span>[ ACCESS NEXT CHAPTER: LOCK EMERGENCY PRESSURE VALVE ]</span>
+            </button>
+          </div>
         </article>
 
 
         <!-- ===================================================================
              CHAPTER 4: THE THIRST ENGINE AWAKENS
              =================================================================== -->
-        <article class="chapter-card hud-glass-violet tactical-chamfer corner-crosshairs-violet p-6 md:p-8" id="chapter-4">
+        <article class="chapter-card hud-glass-violet tactical-chamfer corner-crosshairs-violet p-6 md:p-8 chapter-locked" id="chapter-4">
           <!-- Header Bar -->
           <div class="flex flex-wrap items-center justify-between gap-2 border-b border-purple-900/60 pb-3 mb-5">
             <div class="flex items-center space-x-2">
@@ -563,13 +689,21 @@
               <span>CORE MESSAGE: MATH DEVOID OF EMPATHY IS CRUELTY BY DESIGN</span>
             </div>
           </div>
+
+          <!-- Retro Arcade Chapter Gateway (Game 4 -> Ch 5) -->
+          <div class="mt-6 pt-4 border-t border-purple-900/60 flex justify-end">
+            <button class="chapter-gateway-btn tactical-btn py-3 px-6 text-xs md:text-sm tracking-wider font-heading font-bold" data-game="4" data-target="5">
+              <i data-lucide="crosshair" class="w-4 h-4 text-rogueVioletLight"></i>
+              <span>[ ACCESS NEXT CHAPTER: PURGE THIRST VIRUS NODES ]</span>
+            </button>
+          </div>
         </article>
 
 
         <!-- ===================================================================
              CHAPTER 5: THE IMPOSSIBLE CHOICE
              =================================================================== -->
-        <article class="chapter-card hud-glass tactical-chamfer corner-crosshairs p-6 md:p-8" id="chapter-5">
+        <article class="chapter-card hud-glass tactical-chamfer corner-crosshairs p-6 md:p-8 chapter-locked" id="chapter-5">
           <!-- Header Bar -->
           <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3 mb-5">
             <div class="flex items-center space-x-2">
@@ -630,13 +764,21 @@
               <span>CORE MESSAGE: HEROISM LIES IN SAFEGUARDING THE VULNERABLE</span>
             </div>
           </div>
+
+          <!-- Retro Arcade Chapter Gateway (Game 5 -> Ch 6) -->
+          <div class="mt-6 pt-4 border-t border-slate-800 flex justify-end">
+            <button class="chapter-gateway-btn tactical-btn py-3 px-6 text-xs md:text-sm tracking-wider font-heading font-bold" data-game="5" data-target="6">
+              <i data-lucide="activity" class="w-4 h-4 text-cyberCyan"></i>
+              <span>[ ACCESS NEXT CHAPTER: BALANCE SURGE DAMPENERS ]</span>
+            </button>
+          </div>
         </article>
 
 
         <!-- ===================================================================
              CHAPTER 6: THE LAST DROP PROTOCOL
              =================================================================== -->
-        <article class="chapter-card hud-glass tactical-chamfer corner-crosshairs p-6 md:p-8" id="chapter-6">
+        <article class="chapter-card hud-glass tactical-chamfer corner-crosshairs p-6 md:p-8 chapter-locked" id="chapter-6">
           <!-- Header Bar -->
           <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3 mb-5">
             <div class="flex items-center space-x-2">
@@ -689,13 +831,21 @@
               <span>CORE MESSAGE: TECH PRECISION + GRASSROOTS MOBILIZATION = TRUE CHANGE</span>
             </div>
           </div>
+
+          <!-- Retro Arcade Chapter Gateway (Game 6 -> Ch 7) -->
+          <div class="mt-6 pt-4 border-t border-slate-800 flex justify-end">
+            <button class="chapter-gateway-btn tactical-btn py-3 px-6 text-xs md:text-sm tracking-wider font-heading font-bold" data-game="6" data-target="7">
+              <i data-lucide="zap" class="w-4 h-4 text-bioGreen"></i>
+              <span>[ ACCESS NEXT CHAPTER: OVERRIDE CORE DECOUPLER ]</span>
+            </button>
+          </div>
         </article>
 
 
         <!-- ===================================================================
              CHAPTER 7: REBUILDING TOMORROW
              =================================================================== -->
-        <article class="chapter-card hud-glass tactical-chamfer corner-crosshairs p-6 md:p-8" id="chapter-7">
+        <article class="chapter-card hud-glass tactical-chamfer corner-crosshairs p-6 md:p-8 chapter-locked" id="chapter-7">
           <!-- Header Bar -->
           <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3 mb-5">
             <div class="flex items-center space-x-2">
@@ -760,7 +910,89 @@
               <span>CORE MESSAGE: A RESILIENT FUTURE IS BUILT ON COMMUNITY STEWARDSHIP</span>
             </div>
           </div>
+
+          <!-- Grand Finale Gateway Button -->
+          <div class="mt-6 pt-4 border-t border-slate-800 flex justify-end">
+            <button id="unlock-finale-btn" class="tactical-btn py-3 px-6 text-xs md:text-sm tracking-wider font-heading font-bold border-amber-500/70 text-amber-300 hover:border-amber-400">
+              <i data-lucide="trophy" class="w-4 h-4 text-amber-400"></i>
+              <span>[ CLAIM METROPOLIS VICTORY // INITIATE GRAND FINALE ]</span>
+            </button>
+          </div>
         </article>
+
+        <!-- ===================================================================
+             GRAND FINALE: AVENGERS VICTORY POSTER SECTION
+             =================================================================== -->
+        <section id="finale-section" class="hud-glass-gold tactical-chamfer corner-crosshairs p-6 md:p-10 border border-amber-500/60 shadow-[0_0_50px_rgba(245,158,11,0.25)] hidden">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-amber-500/40 pb-4 mb-8">
+            <div class="flex items-center space-x-3">
+              <span class="px-3 py-1 bg-amber-950/80 border border-amber-400 text-amber-300 font-mono text-xs font-bold rounded">
+                [GRAND FINALE: PROTOCOL COMPLETE]
+              </span>
+              <h2 class="font-heading text-2xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-100 to-cyan-300">
+                NOVARIS SECURED: WATER FOR ALL
+              </h2>
+            </div>
+            <div class="font-mono text-xs text-bioGreen flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-bioGreen animate-ping"></span>
+              METROPOLITAN EQUALIZATION 100% SECURED
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-8">
+            <!-- Victory Poster in High-Tech Illuminated Frame -->
+            <div class="lg:col-span-6 relative">
+              <div class="victory-poster-frame relative rounded overflow-hidden border-2 border-amber-400/80 shadow-[0_0_40px_rgba(245,158,11,0.4),_0_0_80px_rgba(0,240,255,0.25)]">
+                <img src="assets/avengers_poster.png" alt="Avengers Novaris Victory Poster" class="w-full h-auto object-cover transform transition-transform duration-700 hover:scale-105" />
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-60 pointer-events-none"></div>
+                <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between font-mono text-[11px] text-amber-300 bg-slate-950/85 px-3 py-1.5 rounded border border-amber-400/40">
+                  <span>TASKFORCE: STARK • BANNER • THOR • RAO • ASHA</span>
+                  <span>DATE: 2030.10.10</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Victory Briefing & Metrics -->
+            <div class="lg:col-span-6 space-y-6">
+              <div class="p-4 bg-slate-950/80 border border-amber-500/30 rounded tactical-chamfer">
+                <h3 class="font-heading text-lg font-bold text-amber-300 mb-2">THE NOVARIS CIVIC WATER CHARTER</h3>
+                <p class="text-sm text-slate-300 leading-relaxed">
+                  Through the combined bravery of the Avengers, Meera Rao's engineering integrity, and Asha's grassroots mobilization in Shantinagar, the Thirst Engine has been successfully quarantined and decoupled. The municipal water matrix is now operated under a transparent civic covenant guaranteeing clean water as an inviolable human right.
+                </p>
+              </div>
+
+              <!-- Interactive SDG Completion Showcase -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="p-3 bg-slate-950/80 border border-cyan-500/50 rounded text-center">
+                  <span class="font-mono text-[11px] text-cyberCyan block mb-1">SDG 6: CLEAN WATER</span>
+                  <span class="text-2xl font-black font-heading text-white">100%</span>
+                  <span class="text-[10px] text-slate-400 block mt-1">Universal Tap Equity</span>
+                </div>
+                <div class="p-3 bg-slate-950/80 border border-emerald-500/50 rounded text-center">
+                  <span class="font-mono text-[11px] text-bioGreen block mb-1">SDG 10: REDUCED EQUALITY</span>
+                  <span class="text-2xl font-black font-heading text-white">96%</span>
+                  <span class="text-[10px] text-slate-400 block mt-1">Class Bias Eradicated</span>
+                </div>
+                <div class="p-3 bg-slate-950/80 border border-amber-500/50 rounded text-center">
+                  <span class="font-mono text-[11px] text-amber-300 block mb-1">SDG 11: SUSTAINABLE CITY</span>
+                  <span class="text-2xl font-black font-heading text-white">98%</span>
+                  <span class="text-[10px] text-slate-400 block mt-1">Decentralized Basins</span>
+                </div>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-3 pt-2">
+                <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="tactical-btn py-3 px-6 text-xs font-mono font-bold">
+                  <i data-lucide="arrow-up" class="w-4 h-4"></i>
+                  <span>[ RETURN TO TACTICAL COMMAND ]</span>
+                </button>
+                <button onclick="window.soundFX.playStageClear()" class="px-4 py-3 bg-amber-950/60 border border-amber-400/80 hover:bg-amber-900/60 text-amber-300 rounded font-mono text-xs font-bold transition flex items-center gap-2">
+                  <i data-lucide="volume-2" class="w-4 h-4"></i>
+                  <span>REPLAY FANFARE</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
 
       </div>
     </section>
@@ -1212,6 +1444,99 @@
       </div>
     </div>
   </footer>
+
+  <!-- =========================================================================
+       RETRO ARCADE TERMINAL MODAL & CANVAS (MINI-GAME GATEWAY)
+       ========================================================================= -->
+  <div id="arcade-modal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="crt-cabinet-frame w-full max-w-2xl rounded-lg p-4 md:p-6 relative select-none">
+      <div class="crt-scanline-overlay"></div>
+      
+      <!-- Cabinet Header -->
+      <div class="flex items-center justify-between border-b border-cyberCyan/40 pb-3 mb-4 relative z-20">
+        <div class="flex items-center space-x-2">
+          <span class="w-3 h-3 rounded-full bg-alarmCrimson animate-ping"></span>
+          <span id="arcade-game-title" class="font-mono text-sm md:text-base font-bold text-cyberCyan">
+            [ MINI-GAME 1 // DROPLET CATCH ]
+          </span>
+        </div>
+        <button id="arcade-close-btn" class="text-slate-400 hover:text-white font-mono text-xs px-2.5 py-1 border border-slate-700 rounded hover:border-alarmCrimson hover:text-alarmCrimson transition">
+          ✕ ABORT [ESC]
+        </button>
+      </div>
+
+      <!-- HUD Telemetry Scoreboard -->
+      <div class="flex items-center justify-between bg-slate-950/90 border border-slate-800 p-2.5 rounded mb-3 font-mono text-xs relative z-20">
+        <div>
+          <span class="text-slate-400">TARGET: </span>
+          <span id="arcade-objective" class="text-cyberCyan font-bold">CATCH 3 CLEAN DROPS</span>
+        </div>
+        <div>
+          <span class="text-slate-400">SCORE: </span>
+          <span id="arcade-score" class="text-bioGreen font-bold text-sm">0 / 3</span>
+        </div>
+        <div>
+          <span class="text-slate-400">TIME: </span>
+          <span id="arcade-timer" class="text-amber-400 font-bold text-sm">15.0s</span>
+        </div>
+      </div>
+
+      <!-- Instructions Bar -->
+      <div id="arcade-instructions" class="font-mono text-[11px] text-slate-300 mb-3 bg-cyan-950/30 border-l-2 border-cyberCyan p-2 relative z-20">
+        MOVE BUCKET WITH MOUSE OR ARROW KEYS. AVOID RED SLUDGE!
+      </div>
+
+      <!-- Canvas Frame -->
+      <div class="relative bg-slate-950 border border-cyberCyan/60 rounded overflow-hidden aspect-[4/3] max-h-[380px] w-full flex items-center justify-center">
+        <canvas id="arcade-canvas" width="600" height="400" class="w-full h-full block bg-black"></canvas>
+        
+        <!-- In-canvas Mash / Button Overlay (Used in Game 6) -->
+        <div id="arcade-mash-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/70 z-30 hidden">
+          <button id="arcade-mash-btn" class="tactical-btn py-5 px-8 text-lg font-heading font-black tracking-widest animate-pulse border-2 border-cyberCyan shadow-[0_0_30px_#00F0FF]">
+            [ OVERRIDE // TAP RAPIDLY ]
+          </button>
+          <span class="text-xs font-mono text-cyberCyan mt-3">TAP BUTTON OR SPACEBAR REPEATEDLY!</span>
+        </div>
+
+        <!-- Failure Overlay -->
+        <div id="arcade-fail-overlay" class="absolute inset-0 bg-slate-950/90 flex flex-col items-center justify-center p-6 z-30 hidden">
+          <div class="text-alarmCrimson font-heading text-xl md:text-2xl font-black mb-2 animate-crimson-blink">
+            [ SEQUENCE INTERRUPTED // TEST FAILED ]
+          </div>
+          <p id="arcade-fail-msg" class="text-xs font-mono text-slate-300 text-center mb-5">
+            Hydraulic parameter out of bounds. No penalty incurred.
+          </p>
+          <button id="arcade-retry-btn" class="tactical-btn py-3 px-6 text-xs md:text-sm font-mono font-bold border-alarmCrimson text-alarmCrimson hover:border-white hover:text-white">
+            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+            <span>[ RETRY QUICK TEST ]</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Cabinet Footer -->
+      <div class="mt-3 flex items-center justify-between text-[11px] font-mono text-slate-500 relative z-20">
+        <span>TACTICAL RETRO CRT EMULATOR v2.4</span>
+        <span class="text-cyberCyan">WEB AUDIO 8-BIT SYNTH ACTIVE</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       RETRO CRT FULL-SCREEN TRANSITION OVERLAY
+       ========================================================================= -->
+  <div id="crt-transition-overlay" class="fixed inset-0 z-50 pointer-events-none opacity-0 flex flex-col items-center justify-center bg-black transition-opacity">
+    <div class="crt-scanline-overlay"></div>
+    <div class="crt-laser-line"></div>
+    <div id="crt-transition-text" class="relative z-20 text-center space-y-3 font-mono opacity-0 transition-opacity duration-300">
+      <div class="text-cyberCyan font-black text-xl md:text-3xl tracking-widest drop-shadow-[0_0_20px_#00F0FF]">
+        [ STAGE COMPLETE // PROTOCOL BYPASSED ]
+      </div>
+      <div class="text-bioGreen text-sm md:text-base font-bold tracking-wider drop-shadow-[0_0_15px_#00FF88]">
+        [ UNLOCKING NEXT CHAPTER... ]
+      </div>
+    </div>
+  </div>
 
   <!-- Script Initialization -->
   <script src="script.js"></script>

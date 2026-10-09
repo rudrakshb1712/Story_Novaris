@@ -171,6 +171,111 @@
         osc.stop(noteStart + 0.65);
       });
     }
+
+    // 6. 8-Bit Retro Coin Pickup (Two-tone arpeggio)
+    playCoin() {
+      if (this.muted) return;
+      this.ensureContext();
+      if (!this.ctx) return;
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(987.77, now); // B5
+      osc.frequency.setValueAtTime(1318.51, now + 0.08); // E6
+      gain.gain.setValueAtTime(0.12, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.36);
+    }
+
+    // 7. 8-Bit Laser Blast (Pitch-drop sawtooth)
+    playLaser() {
+      if (this.muted) return;
+      this.ensureContext();
+      if (!this.ctx) return;
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(920, now);
+      osc.frequency.exponentialRampToValueAtTime(110, now + 0.14);
+      gain.gain.setValueAtTime(0.15, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.15);
+    }
+
+    // 8. 8-Bit Error Buzz (Low dissonant buzz)
+    playError() {
+      if (this.muted) return;
+      this.ensureContext();
+      if (!this.ctx) return;
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(150, now);
+      osc.frequency.setValueAtTime(110, now + 0.12);
+      gain.gain.setValueAtTime(0.18, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.29);
+    }
+
+    // 9. Node Chime Tone (for Simon-Says sequence)
+    playTone(freq = 440, duration = 0.2) {
+      if (this.muted) return;
+      this.ensureContext();
+      if (!this.ctx) return;
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, now);
+      gain.gain.setValueAtTime(0.15, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(now);
+      osc.stop(now + duration + 0.02);
+    }
+
+    // 10. 8-Bit Victory Fanfare Arpeggio
+    playStageClear() {
+      if (this.muted) return;
+      this.ensureContext();
+      if (!this.ctx) return;
+      const now = this.ctx.currentTime;
+      const notes = [
+        { f: 523.25, d: 0.10 }, // C5
+        { f: 659.25, d: 0.10 }, // E5
+        { f: 783.99, d: 0.10 }, // G5
+        { f: 1046.50, d: 0.14 }, // C6
+        { f: 1318.51, d: 0.35 }  // E6
+      ];
+      let offset = 0;
+      notes.forEach((n) => {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        const noteStart = now + offset;
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(n.f, noteStart);
+        gain.gain.setValueAtTime(0.12, noteStart);
+        gain.gain.exponentialRampToValueAtTime(0.0001, noteStart + n.d);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(noteStart);
+        osc.stop(noteStart + n.d + 0.05);
+        offset += n.d * 0.85;
+      });
+    }
   }
 
   const soundFX = new TacticalAudioSynthesizer();
@@ -837,6 +942,1167 @@
     });
   }
 
+  /* ==========================================================================
+     8. HERO CTA & CHAPTER PROGRESSION SYSTEM
+     ========================================================================== */
+  const heroInitiateBtn = document.getElementById('hero-initiate-btn');
+  if (heroInitiateBtn) {
+    heroInitiateBtn.addEventListener('click', () => {
+      soundFX.playRepulsor();
+      const ch1 = document.getElementById('chapter-1');
+      if (ch1) {
+        ch1.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  }
+
+  // Interactive Pins in Hero Holographic Map
+  document.querySelectorAll('.holo-pin').forEach(pin => {
+    pin.addEventListener('click', () => {
+      soundFX.playClick();
+    });
+  });
+
+  /* ==========================================================================
+     9. RETRO ARCADE MINI-GAME ENGINE & GATEWAYS
+     ========================================================================== */
+  class ArcadeEngine {
+    constructor(soundFX) {
+      this.soundFX = soundFX;
+      this.modal = document.getElementById('arcade-modal');
+      this.closeBtn = document.getElementById('arcade-close-btn');
+      this.titleEl = document.getElementById('arcade-game-title');
+      this.objectiveEl = document.getElementById('arcade-objective');
+      this.scoreEl = document.getElementById('arcade-score');
+      this.timerEl = document.getElementById('arcade-timer');
+      this.instructionsEl = document.getElementById('arcade-instructions');
+      this.canvas = document.getElementById('arcade-canvas');
+      this.ctx = this.canvas ? this.canvas.getContext('2d') : null;
+      this.mashOverlay = document.getElementById('arcade-mash-overlay');
+      this.mashBtn = document.getElementById('arcade-mash-btn');
+      this.failOverlay = document.getElementById('arcade-fail-overlay');
+      this.failMsg = document.getElementById('arcade-fail-msg');
+      this.retryBtn = document.getElementById('arcade-retry-btn');
+      this.crtOverlay = document.getElementById('crt-transition-overlay');
+
+      this.currentGame = 1;
+      this.targetChapter = 2;
+      this.running = false;
+      this.animFrameId = null;
+      this.lastTimestamp = 0;
+      this.timeLeft = 15.0;
+      this.score = 0;
+      this.unlockedChapters = new Set([1]);
+
+      this.mouse = { x: 300, y: 200, down: false };
+      this.keys = {};
+      this.gameState = {};
+
+      this.initEventListeners();
+    }
+
+    initEventListeners() {
+      if (this.closeBtn) {
+        this.closeBtn.addEventListener('click', () => this.abortGame());
+      }
+      if (this.retryBtn) {
+        this.retryBtn.addEventListener('click', () => {
+          this.soundFX.playClick();
+          if (this.failOverlay) this.failOverlay.classList.add('hidden');
+          this.launch(this.currentGame, this.targetChapter);
+        });
+      }
+
+      window.addEventListener('keydown', (e) => {
+        this.keys[e.key] = true;
+        if (e.key === 'Escape' && this.running) {
+          this.abortGame();
+        }
+        if (this.running) {
+          if (this.currentGame === 3 && e.code === 'Space') {
+            e.preventDefault();
+            this.handleGame3Trigger();
+          } else if (this.currentGame === 4 && e.code === 'Space') {
+            e.preventDefault();
+            this.handleGame4Shoot(this.mouse.x, this.mouse.y);
+          } else if (this.currentGame === 6 && e.code === 'Space') {
+            e.preventDefault();
+            this.handleGame6Mash();
+          }
+        }
+      });
+
+      window.addEventListener('keyup', (e) => {
+        this.keys[e.key] = false;
+      });
+
+      if (this.canvas) {
+        const updateMousePos = (e) => {
+          const rect = this.canvas.getBoundingClientRect();
+          const scaleX = this.canvas.width / rect.width;
+          const scaleY = this.canvas.height / rect.height;
+          const clientX = e.clientX ?? (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+          const clientY = e.clientY ?? (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+          this.mouse.x = Math.max(0, Math.min(600, (clientX - rect.left) * scaleX));
+          this.mouse.y = Math.max(0, Math.min(400, (clientY - rect.top) * scaleY));
+        };
+
+        this.canvas.addEventListener('mousemove', updateMousePos);
+        this.canvas.addEventListener('touchmove', (e) => {
+          updateMousePos(e);
+          e.preventDefault();
+        }, { passive: false });
+
+        this.canvas.addEventListener('mousedown', (e) => {
+          this.mouse.down = true;
+          updateMousePos(e);
+          this.handleCanvasClick();
+        });
+
+        this.canvas.addEventListener('touchstart', (e) => {
+          this.mouse.down = true;
+          updateMousePos(e);
+          this.handleCanvasClick();
+        }, { passive: false });
+
+        window.addEventListener('mouseup', () => { this.mouse.down = false; });
+        window.addEventListener('touchend', () => { this.mouse.down = false; });
+      }
+
+      if (this.mashBtn) {
+        this.mashBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          this.handleGame6Mash();
+        });
+      }
+    }
+
+    handleCanvasClick() {
+      if (!this.running) return;
+      if (this.currentGame === 2) {
+        this.handleGame2NodeClick(this.mouse.x, this.mouse.y);
+      } else if (this.currentGame === 3) {
+        this.handleGame3Trigger();
+      } else if (this.currentGame === 4) {
+        this.handleGame4Shoot(this.mouse.x, this.mouse.y);
+      } else if (this.currentGame === 5) {
+        // Vent controls
+        if (this.mouse.y >= 280 && this.mouse.y <= 340) {
+          if (this.mouse.x >= 90 && this.mouse.x <= 250) {
+            this.gameState.needleVx -= 220;
+            this.soundFX.playTick();
+          } else if (this.mouse.x >= 350 && this.mouse.x <= 510) {
+            this.gameState.needleVx += 220;
+            this.soundFX.playTick();
+          }
+        }
+      } else if (this.currentGame === 6) {
+        this.handleGame6Mash();
+      }
+    }
+
+    abortGame() {
+      this.running = false;
+      if (this.animFrameId) cancelAnimationFrame(this.animFrameId);
+      if (this.modal) this.modal.classList.add('hidden');
+      if (this.mashOverlay) this.mashOverlay.classList.add('hidden');
+      if (this.failOverlay) this.failOverlay.classList.add('hidden');
+    }
+
+    launch(gameIndex, targetChapter) {
+      this.currentGame = gameIndex;
+      this.targetChapter = targetChapter;
+      this.running = true;
+      this.lastTimestamp = performance.now();
+      this.score = 0;
+
+      if (this.failOverlay) this.failOverlay.classList.add('hidden');
+      if (this.mashOverlay) this.mashOverlay.classList.add('hidden');
+      if (this.modal) this.modal.classList.remove('hidden');
+
+      this.setupGame(gameIndex);
+
+      this.soundFX.playClick();
+      if (this.animFrameId) cancelAnimationFrame(this.animFrameId);
+      this.animFrameId = requestAnimationFrame((ts) => this.loop(ts));
+    }
+
+    setupGame(gameIndex) {
+      switch (gameIndex) {
+        case 1: // Droplet Catch
+          this.timeLeft = 15.0;
+          if (this.titleEl) this.titleEl.textContent = '[ MINI-GAME 1 // DROPLET CATCH ]';
+          if (this.objectiveEl) this.objectiveEl.textContent = 'CATCH 3 CLEAN DROPS';
+          if (this.scoreEl) this.scoreEl.textContent = '0 / 3';
+          if (this.instructionsEl) this.instructionsEl.textContent = 'MOVE PADDLE WITH MOUSE OR ARROW KEYS. AVOID RED SLUDGE!';
+          this.gameState = {
+            paddle: { x: 255, y: 355, width: 90, height: 16 },
+            drops: [],
+            spawnTimer: 0,
+            particles: []
+          };
+          break;
+
+        case 2: // Node Decryption
+          this.timeLeft = 15.0;
+          if (this.titleEl) this.titleEl.textContent = '[ MINI-GAME 2 // NODE DECRYPTION ]';
+          if (this.objectiveEl) this.objectiveEl.textContent = 'REPLICATE 3-BEAT SEQUENCE';
+          if (this.scoreEl) this.scoreEl.textContent = '0 / 3';
+          if (this.instructionsEl) this.instructionsEl.textContent = 'MEMORIZE THE 3-NODE SEQUENCE, THEN CLICK THEM IN ORDER!';
+          {
+            const s1 = Math.floor(Math.random() * 3);
+            let s2 = Math.floor(Math.random() * 3);
+            if (s2 === s1) s2 = (s1 + 1) % 3;
+            let s3 = Math.floor(Math.random() * 3);
+            this.gameState = {
+              sequence: [s1, s2, s3],
+              nodes: [
+                { id: 0, x: 140, y: 200, r: 42, color: '#00F0FF', name: 'NODE-A (CYAN)', freq: 523.25, flash: 0 },
+                { id: 1, x: 300, y: 200, r: 42, color: '#F59E0B', name: 'NODE-B (AMBER)', freq: 659.25, flash: 0 },
+                { id: 2, x: 460, y: 200, r: 42, color: '#00FF88', name: 'NODE-C (BIO)', freq: 783.99, flash: 0 }
+              ],
+              playbackIndex: 0,
+              playbackTimer: 0.4,
+              phase: 'playback',
+              playerStep: 0
+            };
+          }
+          break;
+
+        case 3: // Valve Timing Lock
+          this.timeLeft = 15.0;
+          if (this.titleEl) this.titleEl.textContent = '[ MINI-GAME 3 // VALVE TIMING LOCK ]';
+          if (this.objectiveEl) this.objectiveEl.textContent = 'LOCK GREEN ZONE 3 TIMES';
+          if (this.scoreEl) this.scoreEl.textContent = '0 / 3';
+          if (this.instructionsEl) this.instructionsEl.textContent = 'PRESS SPACEBAR OR CLICK WHEN NEEDLE ENTERS THE GREEN ZONE!';
+          this.gameState = {
+            angle: 0,
+            targetAngle: Math.random() * Math.PI * 2,
+            arcSize: 0.75,
+            speed: 2.6,
+            lockFlash: 0
+          };
+          break;
+
+        case 4: // Virus Buster
+          this.timeLeft = 15.0;
+          if (this.titleEl) this.titleEl.textContent = '[ MINI-GAME 4 // VIRUS BUSTER ]';
+          if (this.objectiveEl) this.objectiveEl.textContent = 'NEUTRALIZE 4 VIRUS NODES';
+          if (this.scoreEl) this.scoreEl.textContent = '0 / 4';
+          if (this.instructionsEl) this.instructionsEl.textContent = 'AIM WITH MOUSE & CLICK OR PRESS SPACEBAR TO SHOOT REPULSOR LASER!';
+          this.gameState = {
+            viruses: [
+              { x: 130, y: 120, vx: 110, vy: 80, r: 24, alive: true, pulse: 0 },
+              { x: 470, y: 110, vx: -120, vy: 95, r: 24, alive: true, pulse: 1 },
+              { x: 220, y: 250, vx: 100, vy: -105, r: 24, alive: true, pulse: 2 },
+              { x: 410, y: 260, vx: -95, vy: -85, r: 24, alive: true, pulse: 3 }
+            ],
+            lasers: [],
+            particles: []
+          };
+          break;
+
+        case 5: // Pressure Balancer
+          this.timeLeft = 15.0;
+          if (this.titleEl) this.titleEl.textContent = '[ MINI-GAME 5 // PRESSURE BALANCER ]';
+          if (this.objectiveEl) this.objectiveEl.textContent = 'MAINTAIN SAFE ZONE (5.0s)';
+          if (this.scoreEl) this.scoreEl.textContent = '0.0s / 5.0s';
+          if (this.instructionsEl) this.instructionsEl.textContent = 'USE LEFT/RIGHT ARROWS OR ON-SCREEN VENT BUTTONS TO STABILIZE!';
+          this.gameState = {
+            needleX: 300,
+            needleVx: 0,
+            safeMin: 225,
+            safeMax: 375,
+            stableTime: 0.0,
+            totalTime: 0
+          };
+          break;
+
+        case 6: // Core Decouple Mash
+          this.timeLeft = 8.0;
+          if (this.titleEl) this.titleEl.textContent = '[ MINI-GAME 6 // CORE DECOUPLE MASH ]';
+          if (this.objectiveEl) this.objectiveEl.textContent = 'DECOUPLE CORE TO 100%';
+          if (this.scoreEl) this.scoreEl.textContent = '0%';
+          if (this.instructionsEl) this.instructionsEl.textContent = 'MASH THE OVERRIDE BUTTON OR SPACEBAR AS FAST AS POSSIBLE!';
+          if (this.mashOverlay) this.mashOverlay.classList.remove('hidden');
+          this.gameState = {
+            progress: 0,
+            particles: [],
+            pulse: 0
+          };
+          break;
+      }
+    }
+
+    loop(timestamp) {
+      if (!this.running) return;
+
+      const dt = Math.min(0.08, (timestamp - this.lastTimestamp) / 1000);
+      this.lastTimestamp = timestamp;
+
+      this.timeLeft -= dt;
+      if (this.timerEl) {
+        this.timerEl.textContent = Math.max(0, this.timeLeft).toFixed(1) + 's';
+      }
+
+      if (this.timeLeft <= 0) {
+        this.failGame('Time elapsed before hydraulic safety protocol achieved.');
+        return;
+      }
+
+      this.updateGame(dt);
+      this.renderGame();
+
+      if (this.running) {
+        this.animFrameId = requestAnimationFrame((ts) => this.loop(ts));
+      }
+    }
+
+    failGame(reason) {
+      this.running = false;
+      if (this.animFrameId) cancelAnimationFrame(this.animFrameId);
+      this.soundFX.playError();
+      if (this.failMsg) this.failMsg.textContent = reason;
+      if (this.failOverlay) this.failOverlay.classList.remove('hidden');
+    }
+
+    winGame() {
+      this.running = false;
+      if (this.animFrameId) cancelAnimationFrame(this.animFrameId);
+      this.soundFX.playStageClear();
+
+      // Hide modal
+      if (this.modal) this.modal.classList.add('hidden');
+      if (this.mashOverlay) this.mashOverlay.classList.add('hidden');
+
+      // Trigger full-screen CRT transition overlay
+      if (this.crtOverlay) {
+        this.crtOverlay.classList.add('crt-active');
+      }
+
+      // Unlock target chapter
+      const targetChEl = document.getElementById(`chapter-${this.targetChapter}`);
+      if (targetChEl) {
+        targetChEl.classList.remove('chapter-locked');
+        targetChEl.classList.add('chapter-unlocked-glow');
+        this.unlockedChapters.add(this.targetChapter);
+      }
+
+      // Update episodic campaign tracker pill
+      const pill = document.querySelector(`.episode-pill[data-target-ch="${this.targetChapter}"]`);
+      if (pill) {
+        pill.classList.remove('pill-locked');
+        pill.classList.add('pill-active');
+        pill.textContent = `CH ${this.targetChapter}`;
+      }
+
+      // Smooth scroll to newly unlocked chapter
+      setTimeout(() => {
+        if (targetChEl) {
+          targetChEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 500);
+
+      // Dismiss CRT overlay after animation
+      setTimeout(() => {
+        if (this.crtOverlay) {
+          this.crtOverlay.classList.remove('crt-active');
+        }
+      }, 1400);
+    }
+
+    // --- GAME 2 INTERACTION ---
+    handleGame2NodeClick(mx, my) {
+      if (this.gameState.phase !== 'input') return;
+      const clicked = this.gameState.nodes.find(n => {
+        const d = Math.hypot(mx - n.x, my - n.y);
+        return d <= n.r;
+      });
+      if (!clicked) return;
+
+      clicked.flash = 0.35;
+      this.soundFX.playTone(clicked.freq, 0.2);
+
+      const expectedId = this.gameState.sequence[this.gameState.playerStep];
+      if (clicked.id === expectedId) {
+        this.gameState.playerStep++;
+        this.score = this.gameState.playerStep;
+        if (this.scoreEl) this.scoreEl.textContent = `${this.score} / 3`;
+        if (this.gameState.playerStep >= 3) {
+          this.winGame();
+        }
+      } else {
+        this.failGame('Decryption frequency mismatch. Security lockout triggered.');
+      }
+    }
+
+    // --- GAME 3 INTERACTION ---
+    handleGame3Trigger() {
+      const state = this.gameState;
+      let needle = state.angle % (Math.PI * 2);
+      if (needle < 0) needle += Math.PI * 2;
+
+      let target = state.targetAngle % (Math.PI * 2);
+      if (target < 0) target += Math.PI * 2;
+
+      // Check angular distance
+      let diff = Math.abs(needle - target);
+      if (diff > Math.PI) diff = Math.PI * 2 - diff;
+
+      if (diff <= state.arcSize / 2) {
+        this.score++;
+        this.soundFX.playCoin();
+        state.lockFlash = 0.4;
+        state.targetAngle = Math.random() * Math.PI * 2;
+        if (this.scoreEl) this.scoreEl.textContent = `${this.score} / 3`;
+        if (this.score >= 3) {
+          this.winGame();
+        }
+      } else {
+        this.soundFX.playTick();
+        state.lockFlash = -0.4; // red flash
+      }
+    }
+
+    // --- GAME 4 INTERACTION ---
+    handleGame4Shoot(tx, ty) {
+      this.soundFX.playLaser();
+      this.gameState.lasers.push({ tx, ty, alpha: 1.0 });
+
+      this.gameState.viruses.forEach(v => {
+        if (v.alive) {
+          const d = Math.hypot(tx - v.x, ty - v.y);
+          if (d <= v.r + 10) {
+            v.alive = false;
+            this.score++;
+            if (this.scoreEl) this.scoreEl.textContent = `${this.score} / 4`;
+            // Spawn explosion particles
+            for (let i = 0; i < 18; i++) {
+              this.gameState.particles.push({
+                x: v.x,
+                y: v.y,
+                vx: (Math.random() - 0.5) * 260,
+                vy: (Math.random() - 0.5) * 260,
+                color: '#9D4EDD',
+                life: 1.0
+              });
+            }
+          }
+        }
+      });
+
+      if (this.score >= 4) {
+        this.winGame();
+      }
+    }
+
+    // --- GAME 6 INTERACTION ---
+    handleGame6Mash() {
+      this.soundFX.playTick();
+      this.gameState.progress = Math.min(100, this.gameState.progress + 7.5);
+      if (this.scoreEl) this.scoreEl.textContent = `${Math.floor(this.gameState.progress)}%`;
+
+      // Spawn spark particles
+      for (let i = 0; i < 8; i++) {
+        this.gameState.particles.push({
+          x: 300 + (Math.random() - 0.5) * 40,
+          y: 200 + (Math.random() - 0.5) * 40,
+          vx: (Math.random() - 0.5) * 200,
+          vy: (Math.random() - 0.5) * 200,
+          color: Math.random() > 0.5 ? '#00F0FF' : '#F59E0B',
+          life: 0.8
+        });
+      }
+
+      if (this.gameState.progress >= 100) {
+        this.winGame();
+      }
+    }
+
+    // --- UPDATE TICK ---
+    updateGame(dt) {
+      const state = this.gameState;
+
+      switch (this.currentGame) {
+        case 1: { // Droplet Catch
+          // Paddle position update
+          const paddle = state.paddle;
+          if (this.keys['ArrowLeft'] || this.keys['a']) paddle.x -= 380 * dt;
+          if (this.keys['ArrowRight'] || this.keys['d']) paddle.x += 380 * dt;
+          if (this.mouse.x) {
+            paddle.x = this.mouse.x - paddle.width / 2;
+          }
+          paddle.x = Math.max(15, Math.min(600 - paddle.width - 15, paddle.x));
+
+          // Spawn droplets
+          state.spawnTimer += dt;
+          if (state.spawnTimer > 0.55) {
+            state.spawnTimer = 0;
+            const isClean = Math.random() < 0.65;
+            state.drops.push({
+              x: 40 + Math.random() * 520,
+              y: 20,
+              vy: isClean ? 180 + Math.random() * 40 : 160 + Math.random() * 40,
+              type: isClean ? 'clean' : 'sludge',
+              r: isClean ? 10 : 12
+            });
+          }
+
+          // Move and collide drops
+          for (let i = state.drops.length - 1; i >= 0; i--) {
+            const d = state.drops[i];
+            d.y += d.vy * dt;
+
+            // Collision with paddle
+            if (
+              d.y + d.r >= paddle.y &&
+              d.y - d.r <= paddle.y + paddle.height &&
+              d.x >= paddle.x &&
+              d.x <= paddle.x + paddle.width
+            ) {
+              if (d.type === 'clean') {
+                this.score++;
+                this.soundFX.playCoin();
+                if (this.scoreEl) this.scoreEl.textContent = `${this.score} / 3`;
+                // Spawn splash
+                for (let k = 0; k < 12; k++) {
+                  state.particles.push({
+                    x: d.x,
+                    y: paddle.y,
+                    vx: (Math.random() - 0.5) * 160,
+                    vy: -Math.random() * 120,
+                    color: '#00F0FF',
+                    life: 0.8
+                  });
+                }
+                state.drops.splice(i, 1);
+                if (this.score >= 3) {
+                  this.winGame();
+                  return;
+                }
+              } else {
+                this.failGame('Toxic red sludge breached the emergency bypass paddle!');
+                return;
+              }
+            } else if (d.y > 410) {
+              state.drops.splice(i, 1);
+            }
+          }
+
+          // Particles
+          state.particles.forEach(p => {
+            p.x += p.vx * dt;
+            p.y += p.vy * dt;
+            p.life -= dt * 1.8;
+          });
+          state.particles = state.particles.filter(p => p.life > 0);
+          break;
+        }
+
+        case 2: { // Node Decryption
+          state.nodes.forEach(n => {
+            if (n.flash > 0) n.flash -= dt * 2.2;
+          });
+
+          if (state.phase === 'playback') {
+            state.playbackTimer -= dt;
+            if (state.playbackTimer <= 0) {
+              if (state.playbackIndex < state.sequence.length) {
+                const targetNode = state.nodes[state.sequence[state.playbackIndex]];
+                targetNode.flash = 0.5;
+                this.soundFX.playTone(targetNode.freq, 0.25);
+                state.playbackIndex++;
+                state.playbackTimer = 0.65;
+              } else {
+                state.phase = 'input';
+                if (this.instructionsEl) {
+                  this.instructionsEl.textContent = 'YOUR TURN: REPLICATE THE 3-NODE SEQUENCE BY CLICKING THEM!';
+                }
+              }
+            }
+          }
+          break;
+        }
+
+        case 3: { // Valve Timing Lock
+          state.angle = (state.angle + state.speed * dt) % (Math.PI * 2);
+          if (state.lockFlash > 0) state.lockFlash -= dt * 2;
+          if (state.lockFlash < 0) state.lockFlash += dt * 2;
+          break;
+        }
+
+        case 4: { // Virus Buster
+          state.viruses.forEach(v => {
+            if (!v.alive) return;
+            v.x += v.vx * dt;
+            v.y += v.vy * dt;
+            v.pulse += dt * 4;
+
+            if (v.x < 50 || v.x > 550) v.vx *= -1;
+            if (v.y < 50 || v.y > 330) v.vy *= -1;
+          });
+
+          state.lasers.forEach(l => {
+            l.alpha -= dt * 4.5;
+          });
+          state.lasers = state.lasers.filter(l => l.alpha > 0);
+
+          state.particles.forEach(p => {
+            p.x += p.vx * dt;
+            p.y += p.vy * dt;
+            p.life -= dt * 2.2;
+          });
+          state.particles = state.particles.filter(p => p.life > 0);
+          break;
+        }
+
+        case 5: { // Pressure Balancer
+          state.totalTime += dt;
+          // Apply sinusoidal turbulent forces
+          const turbulence = Math.sin(state.totalTime * 3.5) * 110 + Math.cos(state.totalTime * 1.8) * 80;
+          state.needleVx += turbulence * dt;
+
+          if (this.keys['ArrowLeft'] || this.keys['a']) state.needleVx -= 420 * dt;
+          if (this.keys['ArrowRight'] || this.keys['d']) state.needleVx += 420 * dt;
+
+          state.needleVx *= 0.93; // damping
+          state.needleX += state.needleVx * dt;
+          state.needleX = Math.max(90, Math.min(510, state.needleX));
+
+          if (state.needleX >= state.safeMin && state.needleX <= state.safeMax) {
+            state.stableTime += dt;
+          } else {
+            state.stableTime = Math.max(0, state.stableTime - dt * 0.35);
+          }
+
+          if (this.scoreEl) {
+            this.scoreEl.textContent = `${Math.min(5.0, state.stableTime).toFixed(1)}s / 5.0s`;
+          }
+
+          if (state.stableTime >= 5.0) {
+            this.winGame();
+          }
+          break;
+        }
+
+        case 6: { // Core Decouple Mash
+          state.pulse += dt * 5;
+          // Slight decay
+          state.progress = Math.max(0, state.progress - 4.5 * dt);
+          if (this.scoreEl) {
+            this.scoreEl.textContent = `${Math.floor(state.progress)}%`;
+          }
+
+          state.particles.forEach(p => {
+            p.x += p.vx * dt;
+            p.y += p.vy * dt;
+            p.life -= dt * 2.5;
+          });
+          state.particles = state.particles.filter(p => p.life > 0);
+          break;
+        }
+      }
+    }
+
+    // --- RENDER TICK ---
+    renderGame() {
+      if (!this.ctx) return;
+      const ctx = this.ctx;
+      const w = this.canvas.width;
+      const h = this.canvas.height;
+
+      // Dark futuristic CRT backdrop
+      ctx.fillStyle = '#040711';
+      ctx.fillRect(0, 0, w, h);
+
+      // Subtle cyan grid lines
+      ctx.strokeStyle = 'rgba(0, 240, 255, 0.08)';
+      ctx.lineWidth = 1;
+      for (let x = 0; x < w; x += 30) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, h);
+        ctx.stroke();
+      }
+      for (let y = 0; y < h; y += 30) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
+        ctx.stroke();
+      }
+
+      const state = this.gameState;
+
+      switch (this.currentGame) {
+        case 1: { // Droplet Catch
+          // Draw paddle
+          const pad = state.paddle;
+          ctx.fillStyle = 'rgba(0, 240, 255, 0.25)';
+          ctx.strokeStyle = '#00F0FF';
+          ctx.lineWidth = 2;
+          ctx.shadowColor = '#00F0FF';
+          ctx.shadowBlur = 12;
+          ctx.fillRect(pad.x, pad.y, pad.width, pad.height);
+          ctx.strokeRect(pad.x, pad.y, pad.width, pad.height);
+
+          // Paddle center mark
+          ctx.fillStyle = '#FFFFFF';
+          ctx.fillRect(pad.x + pad.width / 2 - 2, pad.y + 2, 4, pad.height - 4);
+          ctx.shadowBlur = 0;
+
+          // Draw droplets
+          state.drops.forEach(d => {
+            ctx.save();
+            if (d.type === 'clean') {
+              ctx.fillStyle = '#00F0FF';
+              ctx.shadowColor = '#00F0FF';
+              ctx.shadowBlur = 10;
+              ctx.beginPath();
+              ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+              ctx.fill();
+
+              // Clean drop highlight
+              ctx.fillStyle = '#FFFFFF';
+              ctx.beginPath();
+              ctx.arc(d.x - 3, d.y - 3, 3, 0, Math.PI * 2);
+              ctx.fill();
+            } else {
+              ctx.fillStyle = '#FF2A55';
+              ctx.shadowColor = '#FF2A55';
+              ctx.shadowBlur = 12;
+              ctx.beginPath();
+              ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+              ctx.fill();
+
+              // Spikes
+              for (let k = 0; k < 6; k++) {
+                const a = (k * Math.PI) / 3;
+                ctx.beginPath();
+                ctx.moveTo(d.x + Math.cos(a) * d.r, d.y + Math.sin(a) * d.r);
+                ctx.lineTo(d.x + Math.cos(a) * (d.r + 5), d.y + Math.sin(a) * (d.r + 5));
+                ctx.strokeStyle = '#FF2A55';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+              }
+            }
+            ctx.restore();
+          });
+
+          // Draw particles
+          state.particles.forEach(p => {
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = Math.max(0, p.life);
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+            ctx.fill();
+          });
+          ctx.globalAlpha = 1;
+          break;
+        }
+
+        case 2: { // Node Decryption
+          // Circuit lines between nodes
+          ctx.strokeStyle = 'rgba(0, 240, 255, 0.2)';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(state.nodes[0].x, state.nodes[0].y);
+          ctx.lineTo(state.nodes[1].x, state.nodes[1].y);
+          ctx.lineTo(state.nodes[2].x, state.nodes[2].y);
+          ctx.stroke();
+
+          // Draw nodes
+          state.nodes.forEach(n => {
+            ctx.save();
+            const isFlashing = n.flash > 0;
+            ctx.fillStyle = isFlashing ? n.color : 'rgba(10, 20, 35, 0.8)';
+            ctx.strokeStyle = n.color;
+            ctx.lineWidth = isFlashing ? 4 : 2;
+            ctx.shadowColor = n.color;
+            ctx.shadowBlur = isFlashing ? 25 : 8;
+
+            ctx.beginPath();
+            ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            // Inner ring
+            ctx.beginPath();
+            ctx.arc(n.x, n.y, n.r - 12, 0, Math.PI * 2);
+            ctx.strokeStyle = isFlashing ? '#FFFFFF' : 'rgba(255, 255, 255, 0.25)';
+            ctx.stroke();
+
+            // Node text label
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = isFlashing ? '#050811' : '#FFFFFF';
+            ctx.font = 'bold 12px "JetBrains Mono", monospace';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(n.name.split(' ')[0], n.x, n.y);
+
+            ctx.restore();
+          });
+          break;
+        }
+
+        case 3: { // Valve Timing Lock
+          const cx = 300;
+          const cy = 200;
+          const r = 110;
+
+          // Flash indicator
+          if (state.lockFlash > 0) {
+            ctx.fillStyle = `rgba(0, 255, 136, ${state.lockFlash * 0.4})`;
+            ctx.fillRect(0, 0, w, h);
+          } else if (state.lockFlash < 0) {
+            ctx.fillStyle = `rgba(255, 42, 85, ${-state.lockFlash * 0.4})`;
+            ctx.fillRect(0, 0, w, h);
+          }
+
+          // Outer dial
+          ctx.strokeStyle = '#00F0FF';
+          ctx.lineWidth = 3;
+          ctx.shadowColor = '#00F0FF';
+          ctx.shadowBlur = 12;
+          ctx.beginPath();
+          ctx.arc(cx, cy, r, 0, Math.PI * 2);
+          ctx.stroke();
+
+          // Green Target Arc
+          ctx.save();
+          ctx.strokeStyle = '#00FF88';
+          ctx.lineWidth = 14;
+          ctx.shadowColor = '#00FF88';
+          ctx.shadowBlur = 16;
+          ctx.beginPath();
+          ctx.arc(cx, cy, r, state.targetAngle - state.arcSize / 2, state.targetAngle + state.arcSize / 2);
+          ctx.stroke();
+          ctx.restore();
+
+          // Tick marks
+          for (let k = 0; k < 12; k++) {
+            const a = (k * Math.PI) / 6;
+            ctx.beginPath();
+            ctx.moveTo(cx + Math.cos(a) * (r - 10), cy + Math.sin(a) * (r - 10));
+            ctx.lineTo(cx + Math.cos(a) * (r - 2), cy + Math.sin(a) * (r - 2));
+            ctx.strokeStyle = 'rgba(0, 240, 255, 0.4)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+          }
+
+          // Rotating needle
+          ctx.save();
+          ctx.shadowColor = '#00F0FF';
+          ctx.shadowBlur = 15;
+          ctx.strokeStyle = '#FFFFFF';
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.moveTo(cx, cy);
+          ctx.lineTo(cx + Math.cos(state.angle) * (r + 8), cy + Math.sin(state.angle) * (r + 8));
+          ctx.stroke();
+
+          // Center needle hub
+          ctx.fillStyle = '#00F0FF';
+          ctx.beginPath();
+          ctx.arc(cx, cy, 10, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+
+          // Top Lock Indicators (3 lights)
+          for (let i = 0; i < 3; i++) {
+            ctx.beginPath();
+            ctx.arc(260 + i * 40, 50, 10, 0, Math.PI * 2);
+            ctx.fillStyle = i < this.score ? '#00FF88' : 'rgba(255, 255, 255, 0.15)';
+            ctx.shadowColor = '#00FF88';
+            ctx.shadowBlur = i < this.score ? 14 : 0;
+            ctx.fill();
+            ctx.strokeStyle = '#00F0FF';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+          }
+          break;
+        }
+
+        case 4: { // Virus Buster
+          // Draw laser blasts
+          state.lasers.forEach(l => {
+            ctx.save();
+            ctx.strokeStyle = `rgba(0, 240, 255, ${l.alpha})`;
+            ctx.shadowColor = '#00F0FF';
+            ctx.shadowBlur = 20;
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(300, 395);
+            ctx.lineTo(l.tx, l.ty);
+            ctx.stroke();
+
+            // Core beam white
+            ctx.strokeStyle = `rgba(255, 255, 255, ${l.alpha})`;
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+            ctx.restore();
+          });
+
+          // Draw viruses
+          state.viruses.forEach(v => {
+            if (!v.alive) return;
+            ctx.save();
+            ctx.translate(v.x, v.y);
+            ctx.fillStyle = '#9D4EDD';
+            ctx.shadowColor = '#9D4EDD';
+            ctx.shadowBlur = 18;
+
+            ctx.beginPath();
+            ctx.arc(0, 0, v.r, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 8 outer virus tentacles
+            for (let k = 0; k < 8; k++) {
+              const a = (k * Math.PI) / 4 + v.pulse * 0.2;
+              ctx.strokeStyle = '#D8B4FE';
+              ctx.lineWidth = 2.5;
+              ctx.beginPath();
+              ctx.moveTo(Math.cos(a) * v.r, Math.sin(a) * v.r);
+              ctx.lineTo(Math.cos(a) * (v.r + 9), Math.sin(a) * (v.r + 9));
+              ctx.stroke();
+            }
+
+            // Core iris
+            ctx.fillStyle = '#050811';
+            ctx.beginPath();
+            ctx.arc(0, 0, 8, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          });
+
+          // Particles
+          state.particles.forEach(p => {
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = Math.max(0, p.life);
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+            ctx.fill();
+          });
+          ctx.globalAlpha = 1;
+
+          // Crosshair reticle at mouse
+          ctx.save();
+          ctx.strokeStyle = '#00F0FF';
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.arc(this.mouse.x, this.mouse.y, 14, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(this.mouse.x - 20, this.mouse.y);
+          ctx.lineTo(this.mouse.x + 20, this.mouse.y);
+          ctx.moveTo(this.mouse.x, this.mouse.y - 20);
+          ctx.lineTo(this.mouse.x, this.mouse.y + 20);
+          ctx.stroke();
+          ctx.restore();
+          break;
+        }
+
+        case 5: { // Pressure Balancer
+          // Gauge chassis
+          ctx.fillStyle = 'rgba(8, 14, 28, 0.9)';
+          ctx.fillRect(80, 160, 440, 70);
+          ctx.strokeStyle = '#00F0FF';
+          ctx.lineWidth = 2;
+          ctx.strokeRect(80, 160, 440, 70);
+
+          // Green safe zone
+          ctx.fillStyle = 'rgba(0, 255, 136, 0.25)';
+          ctx.fillRect(state.safeMin, 160, state.safeMax - state.safeMin, 70);
+          ctx.strokeStyle = '#00FF88';
+          ctx.lineWidth = 2;
+          ctx.shadowColor = '#00FF88';
+          ctx.shadowBlur = 10;
+          ctx.strokeRect(state.safeMin, 160, state.safeMax - state.safeMin, 70);
+          ctx.shadowBlur = 0;
+
+          // Safe zone text
+          ctx.font = 'bold 10px "JetBrains Mono", monospace';
+          ctx.fillStyle = '#00FF88';
+          ctx.textAlign = 'center';
+          ctx.fillText('[SAFE ZONE: 180-220 PSI]', 300, 150);
+
+          // Top Stability Progress Bar
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+          ctx.fillRect(80, 90, 440, 14);
+          const progRatio = Math.min(1.0, state.stableTime / 5.0);
+          ctx.fillStyle = '#00FF88';
+          ctx.shadowColor = '#00FF88';
+          ctx.shadowBlur = 8;
+          ctx.fillRect(80, 90, 440 * progRatio, 14);
+          ctx.shadowBlur = 0;
+          ctx.fillText(`STABILITY LOCK: ${(progRatio * 100).toFixed(0)}%`, 300, 80);
+
+          // Oscillating needle
+          const isSafe = state.needleX >= state.safeMin && state.needleX <= state.safeMax;
+          ctx.strokeStyle = isSafe ? '#FFFFFF' : '#FF2A55';
+          ctx.lineWidth = 4;
+          ctx.shadowColor = isSafe ? '#00FF88' : '#FF2A55';
+          ctx.shadowBlur = 16;
+          ctx.beginPath();
+          ctx.moveTo(state.needleX, 150);
+          ctx.lineTo(state.needleX, 240);
+          ctx.stroke();
+          ctx.shadowBlur = 0;
+
+          // Needle Pointer Head
+          ctx.fillStyle = isSafe ? '#00FF88' : '#FF2A55';
+          ctx.beginPath();
+          ctx.moveTo(state.needleX - 7, 245);
+          ctx.lineTo(state.needleX + 7, 245);
+          ctx.lineTo(state.needleX, 235);
+          ctx.closePath();
+          ctx.fill();
+
+          // Interactive Vent Buttons on canvas
+          ctx.fillStyle = 'rgba(0, 240, 255, 0.15)';
+          ctx.strokeStyle = '#00F0FF';
+          ctx.lineWidth = 1.5;
+
+          // Vent Left
+          ctx.fillRect(90, 280, 160, 44);
+          ctx.strokeRect(90, 280, 160, 44);
+          ctx.fillStyle = '#00F0FF';
+          ctx.font = 'bold 12px "JetBrains Mono", monospace';
+          ctx.textAlign = 'center';
+          ctx.fillText('[ < VENT LEFT ]', 170, 307);
+
+          // Vent Right
+          ctx.fillStyle = 'rgba(0, 240, 255, 0.15)';
+          ctx.fillRect(350, 280, 160, 44);
+          ctx.strokeRect(350, 280, 160, 44);
+          ctx.fillStyle = '#00F0FF';
+          ctx.fillText('[ VENT RIGHT > ]', 430, 307);
+          break;
+        }
+
+        case 6: { // Core Decouple Mash
+          const cx = 300;
+          const cy = 180;
+
+          // Core chassis circular rings
+          ctx.save();
+          ctx.strokeStyle = 'rgba(157, 78, 221, 0.4)';
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.arc(cx, cy, 90, 0, Math.PI * 2);
+          ctx.stroke();
+
+          // Progress Arc
+          const angle = (state.progress / 100) * Math.PI * 2;
+          ctx.strokeStyle = '#00F0FF';
+          ctx.lineWidth = 8;
+          ctx.shadowColor = '#00F0FF';
+          ctx.shadowBlur = 20;
+          ctx.beginPath();
+          ctx.arc(cx, cy, 90, -Math.PI / 2, -Math.PI / 2 + angle);
+          ctx.stroke();
+
+          // Core pulsing glow
+          ctx.fillStyle = `rgba(0, 240, 255, ${0.1 + (state.progress / 100) * 0.4})`;
+          ctx.beginPath();
+          ctx.arc(cx, cy, 60, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Core Decouple percentage
+          ctx.shadowBlur = 0;
+          ctx.font = 'black 26px "Orbitron", sans-serif';
+          ctx.fillStyle = '#FFFFFF';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(`${Math.floor(state.progress)}%`, cx, cy);
+
+          ctx.font = '11px "JetBrains Mono", monospace';
+          ctx.fillStyle = '#00F0FF';
+          ctx.fillText('THIRST ENGINE DECOUPLER', cx, cy + 28);
+          ctx.restore();
+
+          // Particles
+          state.particles.forEach(p => {
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = Math.max(0, p.life);
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+            ctx.fill();
+          });
+          ctx.globalAlpha = 1;
+          break;
+        }
+      }
+    }
+  }
+
+  const arcadeEngine = new ArcadeEngine(soundFX);
+  window.arcadeEngine = arcadeEngine;
+
+  // Wire up Gateway Buttons on each chapter
+  document.querySelectorAll('.chapter-gateway-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const game = parseInt(btn.getAttribute('data-game'), 10) || 1;
+      const target = parseInt(btn.getAttribute('data-target'), 10) || 2;
+      arcadeEngine.launch(game, target);
+    });
+  });
+
+  // Wire up Grand Finale button
+  const unlockFinaleBtn = document.getElementById('unlock-finale-btn');
+  const finaleSection = document.getElementById('finale-section');
+  if (unlockFinaleBtn && finaleSection) {
+    unlockFinaleBtn.addEventListener('click', () => {
+      soundFX.playStageClear();
+      const crtOverlay = document.getElementById('crt-transition-overlay');
+      if (crtOverlay) {
+        crtOverlay.classList.add('crt-active');
+      }
+
+      finaleSection.classList.remove('hidden');
+
+      const finalePill = document.querySelector('.episode-pill[data-target-ch="finale"]');
+      if (finalePill) {
+        finalePill.classList.remove('pill-locked', 'border-amber-900/60', 'text-amber-500/60');
+        finalePill.classList.add('pill-active', 'border-amber-400', 'bg-amber-400', 'text-slate-950');
+        finalePill.textContent = '★ FINALE';
+      }
+
+      setTimeout(() => {
+        finaleSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 500);
+
+      setTimeout(() => {
+        if (crtOverlay) {
+          crtOverlay.classList.remove('crt-active');
+        }
+      }, 1400);
+    });
+  }
+
+  // Episodic Tracker Pills Navigation
+  document.querySelectorAll('.episode-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      const target = pill.getAttribute('data-target-ch');
+      if (target === 'finale') {
+        if (finaleSection && !finaleSection.classList.contains('hidden')) {
+          soundFX.playClick();
+          finaleSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          soundFX.playAlert();
+        }
+      } else {
+        const chNum = parseInt(target, 10);
+        const chEl = document.getElementById(`chapter-${chNum}`);
+        if (chEl && !chEl.classList.contains('chapter-locked')) {
+          soundFX.playClick();
+          chEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          soundFX.playAlert();
+        }
+      }
+    });
+  });
+
   // Tactical click audio on all buttons and navigation links
   document.querySelectorAll('button, a[href^="#"]').forEach((el) => {
     el.addEventListener('click', () => {
@@ -850,3 +2116,4 @@
   }
 
 })();
+
